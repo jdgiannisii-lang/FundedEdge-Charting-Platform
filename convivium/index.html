@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convivium Advisors — Strategic Advisory & Fractional CFO</title>
+  <meta name="description" content="Convivium Advisors provides strategic advisory and fractional CFO services to early-stage, high-growth technology startups." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:   #0f3535;
+      --forest-80: rgba(15,53,53,0.8);
+      --forest-40: rgba(15,53,53,0.4);
+      --forest-10: rgba(15,53,53,0.08);
+      --sage:     #C3C8BA;
+      --sage-50:  rgba(195,200,186,0.5);
+      --sage-20:  rgba(195,200,186,0.2);
+      --olive:    #999B5B;
+      --olive-80: rgba(153,155,91,0.8);
+      --olive-20: rgba(153,155,91,0.2);
+      --white:    #FAFAF8;
+      --off-white: #F2F2EE;
+      --dark:     #0a2828;
+      --text:     #1a3a3a;
+      --text-muted: #4a6060;
+
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans:  'Inter', system-ui, sans-serif;
+
+      --transition: 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --transition-fast: 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── Custom Cursor ─── */
+    .cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 10px; height: 10px;
+      background: var(--olive);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+      mix-blend-mode: multiply;
+    }
+    .cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      width: 38px; height: 38px;
+      border: 1.5px solid var(--olive);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.18s, width 0.3s, height 0.3s, opacity 0.3s;
+      opacity: 0.6;
+    }
+    .cursor.hovered { width: 16px; height: 16px; background: var(--forest); }
+    .cursor-ring.hovered { width: 52px; height: 52px; opacity: 0.3; }
+
+    @media (pointer: coarse) { .cursor, .cursor-ring { display: none; } body { cursor: auto; } }
+
+    /* ─── Scroll Animations ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ─── Navigation ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 28px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background var(--transition), padding var(--transition), backdrop-filter var(--transition);
+    }
+    nav.scrolled {
+      background: rgba(15,53,53,0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 18px 60px;
+      box-shadow: 0 1px 0 rgba(195,200,186,0.1);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--olive);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0;
+      flex-shrink: 0;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--olive);
+      transition: width var(--transition-fast);
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      font-size: 0.8rem !important;
+      letter-spacing: 0.08em !important;
+      color: var(--white) !important;
+      background: var(--olive);
+      padding: 10px 24px !important;
+      border-radius: 2px;
+      transition: background var(--transition-fast), transform var(--transition-fast) !important;
+    }
+    .nav-cta:hover { background: #b3b56a !important; transform: translateY(-1px); }
+    .nav-cta::after { display: none !important; }
+
+    /* Hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px; height: 1.5px;
+      background: var(--sage);
+      transition: all var(--transition-fast);
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100vh;
+      background: var(--forest);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 140px 60px 100px;
+    }
+    .hero-bg-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 80% 20%, rgba(153,155,91,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 10% 80%, rgba(195,200,186,0.06) 0%, transparent 40%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(195,200,186,0.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(195,200,186,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      max-width: 900px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 36px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 36px; height: 1px;
+      background: var(--olive);
+    }
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(3.2rem, 7vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.08;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 32px;
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--sage);
+    }
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(195,200,186,0.8);
+      max-width: 540px;
+      margin-bottom: 52px;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--olive);
+      color: var(--white);
+      text-decoration: none;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      border-radius: 2px;
+      transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .btn-primary:hover {
+      background: #b3b56a;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(153,155,91,0.3);
+    }
+    .btn-primary svg { transition: transform var(--transition-fast); }
+    .btn-primary:hover svg { transform: translateX(4px); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--sage);
+      text-decoration: none;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(195,200,186,0.3);
+      padding-bottom: 2px;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--white); }
+
+    .hero-stats {
+      position: absolute;
+      bottom: 60px; right: 60px;
+      display: flex;
+      gap: 48px;
+    }
+    .hero-stat {
+      text-align: right;
+    }
+    .hero-stat-number {
+      font-family: var(--serif);
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1;
+      display: block;
+    }
+    .hero-stat-label {
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--olive);
+      display: block;
+      margin-top: 6px;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px; left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(195,200,186,0.5);
+    }
+    .hero-scroll-line {
+      width: 40px; height: 1px;
+      background: rgba(195,200,186,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-scroll-line::after {
+      content: '';
+      position: absolute;
+      left: -100%; top: 0;
+      width: 100%; height: 100%;
+      background: var(--olive);
+      animation: scroll-line 2.4s ease-in-out infinite;
+    }
+    @keyframes scroll-line {
+      0% { left: -100%; }
+      50% { left: 0%; }
+      100% { left: 100%; }
+    }
+
+    /* ─── Marquee ─── */
+    .marquee-wrap {
+      background: var(--olive);
+      padding: 14px 0;
+      overflow: hidden;
+      display: flex;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      animation: marquee 28s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 24px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--white);
+      padding: 0 32px;
+    }
+    .marquee-dot {
+      width: 4px; height: 4px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── Section Shared ─── */
+    section { position: relative; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+    .section-pad { padding: 120px 0; }
+    .section-pad-sm { padding: 80px 0; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 24px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px; height: 1px;
+      background: var(--olive);
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--forest);
+      letter-spacing: -0.01em;
+    }
+    .section-title em { font-style: italic; color: var(--olive); }
+    .section-title-light { color: var(--white); }
+    .section-title-light em { color: var(--sage); }
+
+    /* ─── What We Do ─── */
+    .what-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .what-text .section-title { margin-bottom: 28px; }
+    .what-text p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .what-text p:last-of-type { margin-bottom: 36px; }
+    .what-visual {
+      position: relative;
+    }
+    .what-card {
+      background: var(--forest);
+      border-radius: 4px;
+      padding: 48px;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    .what-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(153,155,91,0.12);
+    }
+    .what-card-icon {
+      width: 48px; height: 48px;
+      background: var(--olive-20);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: var(--olive);
+    }
+    .what-card h3 {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 12px;
+      color: var(--white);
+    }
+    .what-card p {
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: var(--sage);
+    }
+    .what-floater {
+      position: absolute;
+      bottom: -24px; left: -24px;
+      background: var(--white);
+      border: 1px solid var(--sage-50);
+      border-radius: 4px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 20px 48px rgba(15,53,53,0.12);
+      white-space: nowrap;
+    }
+    .what-floater-icon {
+      width: 40px; height: 40px;
+      background: var(--olive-20);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--olive);
+      flex-shrink: 0;
+    }
+    .what-floater strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--forest);
+      line-height: 1;
+    }
+    .what-floater span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Services ─── */
+    .services-bg { background: var(--off-white); }
+    .services-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 64px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .services-header .section-title { max-width: 420px; }
+    .services-header p {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      max-width: 340px;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+    .service-card {
+      background: var(--white);
+      padding: 52px 48px;
+      position: relative;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+      overflow: hidden;
+      cursor: default;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--olive);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+    .service-card:hover { background: var(--forest); }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover .service-num,
+    .service-card:hover .service-title,
+    .service-card:hover .service-desc,
+    .service-card:hover .service-tags span { color: var(--white); }
+    .service-card:hover .service-tags span { border-color: rgba(255,255,255,0.2); }
+    .service-card:hover .service-icon { background: rgba(153,155,91,0.15); color: var(--olive); }
+    .service-num {
+      font-family: var(--serif);
+      font-size: 0.85rem;
+      color: var(--olive);
+      margin-bottom: 28px;
+      display: block;
+      transition: color var(--transition-fast);
+    }
+    .service-icon {
+      width: 52px; height: 52px;
+      background: var(--forest-10);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--forest);
+      margin-bottom: 28px;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .service-title {
+      font-family: var(--serif);
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: var(--forest);
+      margin-bottom: 16px;
+      line-height: 1.2;
+      transition: color var(--transition-fast);
+    }
+    .service-desc {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      transition: color var(--transition-fast);
+    }
+    .service-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .service-tags span {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border: 1px solid var(--sage-50);
+      border-radius: 2px;
+      padding: 4px 10px;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    /* ─── Philosophy ─── */
+    .philosophy-bg { background: var(--forest); }
+    .philosophy-inner {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 100px;
+      align-items: start;
+    }
+    .philosophy-left { position: sticky; top: 120px; }
+    .philosophy-left .section-label { color: rgba(195,200,186,0.6); }
+    .philosophy-left .section-label::before { background: rgba(195,200,186,0.3); }
+    .philosophy-title {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 4vw, 3.5rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+    .philosophy-title em { font-style: italic; color: var(--sage); }
+    .philosophy-sub {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: rgba(195,200,186,0.65);
+    }
+    .pillars { display: flex; flex-direction: column; gap: 0; }
+    .pillar {
+      border-top: 1px solid rgba(195,200,186,0.12);
+      padding: 44px 0;
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .pillar:last-child { border-bottom: 1px solid rgba(195,200,186,0.12); }
+    .pillar-num {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 300;
+      color: rgba(195,200,186,0.25);
+      line-height: 1;
+      padding-top: 4px;
+    }
+    .pillar h4 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .pillar p {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: rgba(195,200,186,0.65);
+    }
+
+    /* ─── Why Convivium ─── */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      margin-top: 64px;
+    }
+    .why-item { }
+    .why-icon {
+      width: 52px; height: 52px;
+      background: var(--olive-20);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--olive);
+      margin-bottom: 24px;
+    }
+    .why-item h4 {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--forest);
+      margin-bottom: 12px;
+    }
+    .why-item p {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+    .why-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sage-50), transparent);
+      margin: 48px 0;
+    }
+
+    /* ─── Process ─── */
+    .process-bg { background: var(--off-white); }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-top: 64px;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sage), var(--sage), transparent);
+    }
+    .process-step {
+      text-align: center;
+      padding: 0 24px;
+      position: relative;
+    }
+    .step-dot {
+      width: 56px; height: 56px;
+      background: var(--white);
+      border: 2px solid var(--sage);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--olive);
+      position: relative;
+      z-index: 1;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+    }
+    .process-step:hover .step-dot {
+      background: var(--forest);
+      border-color: var(--forest);
+      color: var(--white);
+    }
+    .process-step h4 {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--forest);
+      margin-bottom: 10px;
+    }
+    .process-step p {
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+    }
+
+    /* ─── Testimonials ─── */
+    .testimonials-bg { background: var(--forest); }
+    .testimonials-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .testimonials-left .section-label { color: rgba(195,200,186,0.6); }
+    .testimonials-left .section-label::before { background: rgba(195,200,186,0.3); }
+    .testimonials-left .section-title { color: var(--white); }
+    .testimonials-left .section-title em { color: var(--sage); }
+    .testimonials-left p {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: rgba(195,200,186,0.7);
+    }
+    .testimonial-cards { display: flex; flex-direction: column; gap: 20px; }
+    .testimonial-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(195,200,186,0.12);
+      border-radius: 4px;
+      padding: 36px;
+      position: relative;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+    .testimonial-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(153,155,91,0.3);
+    }
+    .testimonial-card .quote-mark {
+      font-family: var(--serif);
+      font-size: 4rem;
+      color: var(--olive);
+      line-height: 1;
+      margin-bottom: 16px;
+      display: block;
+      opacity: 0.6;
+    }
+    .testimonial-card blockquote {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .author-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--olive-20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--olive);
+      flex-shrink: 0;
+    }
+    .author-info strong {
+      display: block;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--white);
+    }
+    .author-info span {
+      font-size: 0.75rem;
+      color: rgba(195,200,186,0.55);
+    }
+
+    /* ─── Team ─── */
+    .team-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 64px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .team-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+    .team-photo {
+      aspect-ratio: 3/4;
+      background: var(--sage-20);
+      position: relative;
+      overflow: hidden;
+    }
+    .team-photo-inner {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--sage-20), var(--forest-10));
+      position: relative;
+    }
+    .team-initials {
+      font-family: var(--serif);
+      font-size: 4rem;
+      font-weight: 300;
+      color: var(--forest);
+      opacity: 0.35;
+    }
+    .team-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--forest) 30%, transparent 80%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .team-card:hover .team-overlay { opacity: 1; }
+    .team-overlay p {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--sage);
+    }
+    .team-info { padding: 20px 0 0; }
+    .team-info h4 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--forest);
+      margin-bottom: 4px;
+    }
+    .team-info span {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--olive);
+    }
+
+    /* ─── Clients / Logos ─── */
+    .clients-bg { background: var(--off-white); }
+    .clients-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .clients-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+    .client-logo {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: rgba(15,53,53,0.25);
+      letter-spacing: 0.04em;
+      transition: color var(--transition-fast);
+      white-space: nowrap;
+    }
+    .client-logo:hover { color: var(--olive); }
+
+    /* ─── CTA Section ─── */
+    .cta-bg {
+      background: var(--olive);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-bg::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: -80px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .cta-bg::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -40px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .cta-inner .section-label { justify-content: center; color: rgba(255,255,255,0.7); }
+    .cta-inner .section-label::before { background: rgba(255,255,255,0.4); }
+    .cta-inner .section-title {
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+    .cta-inner p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 40px;
+    }
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      color: var(--forest);
+      text-decoration: none;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      border-radius: 2px;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn-white:hover { background: var(--off-white); transform: translateY(-2px); }
+    .btn-outline-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      color: var(--white);
+      text-decoration: none;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 15px 32px;
+      border-radius: 2px;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+    }
+    .btn-outline-white:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+    /* ─── Contact ─── */
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 100px;
+      align-items: start;
+    }
+    .contact-left .section-title { margin-bottom: 20px; }
+    .contact-left p {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+    }
+    .contact-details { display: flex; flex-direction: column; gap: 20px; }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .contact-item-icon {
+      width: 40px; height: 40px;
+      background: var(--forest-10);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--forest);
+      flex-shrink: 0;
+    }
+    .contact-item-text strong {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 4px;
+    }
+    .contact-item-text a, .contact-item-text span {
+      font-size: 0.9rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .contact-item-text a:hover { color: var(--forest); }
+
+    .contact-form {
+      background: var(--off-white);
+      border-radius: 4px;
+      padding: 48px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--sage);
+      border-radius: 2px;
+      padding: 13px 16px;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(15,53,53,0.08);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999B5B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer; }
+    .form-submit {
+      width: 100%;
+      background: var(--forest);
+      color: var(--white);
+      border: none;
+      padding: 16px 24px;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .form-submit:hover { background: var(--dark); transform: translateY(-1px); }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--dark);
+      padding: 72px 0 36px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid rgba(195,200,186,0.1);
+      margin-bottom: 36px;
+    }
+    .footer-brand .nav-logo {
+      margin-bottom: 20px;
+      display: inline-flex;
+    }
+    .footer-brand p {
+      font-size: 0.84rem;
+      line-height: 1.75;
+      color: rgba(195,200,186,0.55);
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      background: rgba(195,200,186,0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(195,200,186,0.5);
+      text-decoration: none;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .social-link:hover { background: var(--olive); color: var(--white); }
+    .footer-col h5 {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a {
+      font-size: 0.84rem;
+      color: rgba(195,200,186,0.5);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-bottom p {
+      font-size: 0.75rem;
+      color: rgba(195,200,186,0.3);
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-bottom-links a {
+      font-size: 0.75rem;
+      color: rgba(195,200,186,0.3);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .footer-bottom-links a:hover { color: var(--sage); }
+
+    /* ─── Mobile Nav ─── */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--forest);
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: all; }
+    .mobile-menu a {
+      font-family: var(--serif);
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--white);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .mobile-menu a:hover { color: var(--olive); }
+    .mobile-close {
+      position: absolute;
+      top: 28px; right: 28px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--sage);
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 8px;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 1024px) {
+      .container { padding: 0 40px; }
+      nav { padding: 24px 40px; }
+      nav.scrolled { padding: 16px 40px; }
+      .what-wrap { grid-template-columns: 1fr; gap: 48px; }
+      .what-visual { max-width: 480px; }
+      .philosophy-inner { grid-template-columns: 1fr; gap: 48px; }
+      .philosophy-left { position: static; }
+      .testimonials-inner { grid-template-columns: 1fr; gap: 48px; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .process-steps { grid-template-columns: repeat(2, 1fr); }
+      .process-steps::before { display: none; }
+      .process-step { margin-bottom: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      .section-pad { padding: 80px 0; }
+      nav { padding: 20px 24px; }
+      nav.scrolled { padding: 14px 24px; }
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .hero { padding: 120px 24px 80px; }
+      .hero-stats { position: static; display: flex; gap: 32px; margin-top: 56px; flex-wrap: wrap; }
+      .hero-stat { text-align: left; }
+      .hero-scroll { display: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; gap: 32px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; }
+      .contact-form { padding: 32px 24px; }
+      .services-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="#services" onclick="closeMobile()">Services</a>
+    <a href="#philosophy" onclick="closeMobile()">Philosophy</a>
+    <a href="#team" onclick="closeMobile()">Team</a>
+    <a href="#process" onclick="closeMobile()">Process</a>
+    <a href="#contact" onclick="closeMobile()">Contact</a>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">
+      <span class="logo-mark">CA</span>
+      Convivium Advisors
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#philosophy">Philosophy</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal">Strategic Advisory & Fractional CFO</div>
+      <h1 class="hero-headline reveal reveal-delay-1">
+        Financial clarity<br>for <em>ambitious</em><br>founders.
+      </h1>
+      <p class="hero-sub reveal reveal-delay-2">
+        We partner with early-stage, high-growth technology companies to provide the strategic financial leadership they need — without the full-time cost.
+      </p>
+      <div class="hero-actions reveal reveal-delay-3">
+        <a href="#contact" class="btn-primary">
+          Work With Us
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#services" class="btn-ghost">Explore Our Services</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat reveal reveal-delay-2">
+        <span class="hero-stat-number">50+</span>
+        <span class="hero-stat-label">Startups Advised</span>
+      </div>
+      <div class="hero-stat reveal reveal-delay-3">
+        <span class="hero-stat-number">$2B+</span>
+        <span class="hero-stat-label">Capital Raised</span>
+      </div>
+      <div class="hero-stat reveal reveal-delay-4">
+        <span class="hero-stat-number">18yr</span>
+        <span class="hero-stat-label">CFO Experience</span>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- ── Marquee ── -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Fractional CFO <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Strategic Advisory <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Fundraising Support <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Financial Modeling <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Board Reporting <span class="marquee-dot"></span></span>
+      <span class="marquee-item">M&amp;A Advisory <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Investor Relations <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Operational Finance <span class="marquee-dot"></span></span>
+      <!-- duplicate for seamless loop -->
+      <span class="marquee-item">Fractional CFO <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Strategic Advisory <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Fundraising Support <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Financial Modeling <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Board Reporting <span class="marquee-dot"></span></span>
+      <span class="marquee-item">M&amp;A Advisory <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Investor Relations <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Operational Finance <span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
+  <!-- ── What We Do ── -->
+  <section class="section-pad">
+    <div class="container">
+      <div class="what-wrap">
+        <div class="what-text">
+          <div class="section-label reveal">About Us</div>
+          <h2 class="section-title reveal reveal-delay-1">
+            The CFO your startup<br>deserves <em>now</em>.
+          </h2>
+          <p class="reveal reveal-delay-2">
+            Convivium Advisors brings the financial rigor and strategic perspective of a seasoned CFO to companies at the critical junctures of their growth — without the overhead of a full-time executive hire.
+          </p>
+          <p class="reveal reveal-delay-3">
+            We embed deeply with your team to understand your business, your investors, and your ambitions — then build the financial systems and strategy to support them.
+          </p>
+          <a href="#services" class="btn-ghost reveal reveal-delay-4">
+            See How We Help
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        <div class="what-visual reveal reveal-delay-2">
+          <div class="what-card">
+            <div class="what-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3>Strategic by design,<br>tactical by necessity.</h3>
+            <p>We bring both the 30,000-foot view and the ability to roll up our sleeves when it matters most — from building investor decks to closing the books.</p>
+          </div>
+          <div class="what-floater">
+            <div class="what-floater-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+              <strong>Series A → B</strong>
+              <span>Average client growth stage</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ── -->
+  <section class="section-pad services-bg" id="services">
+    <div class="container">
+      <div class="services-header">
+        <div>
+          <div class="section-label reveal">What We Do</div>
+          <h2 class="section-title reveal reveal-delay-1">
+            End-to-end financial<br><em>partnership</em>.
+          </h2>
+        </div>
+        <p class="reveal reveal-delay-2">From your first investor meeting to your Series C and beyond, we provide the financial infrastructure your company needs to scale with confidence.</p>
+      </div>
+      <div class="services-grid">
+
+        <div class="service-card reveal">
+          <span class="service-num">01</span>
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3 class="service-title">Fractional CFO</h3>
+          <p class="service-desc">Embedded strategic financial leadership tailored to your stage. We act as your CFO — attending board meetings, guiding your team, and owning the financial narrative of your business.</p>
+          <div class="service-tags">
+            <span>Strategic Planning</span>
+            <span>Board Reporting</span>
+            <span>KPI Frameworks</span>
+            <span>Cash Management</span>
+          </div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-1">
+          <span class="service-num">02</span>
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <h3 class="service-title">Fundraising Advisory</h3>
+          <p class="service-desc">Prepare for your next round with investor-grade financial models, data room management, and narrative strategy. We've helped startups raise from the best firms in the world.</p>
+          <div class="service-tags">
+            <span>Pitch Decks</span>
+            <span>Financial Models</span>
+            <span>Data Room</span>
+            <span>Investor Diligence</span>
+          </div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-2">
+          <span class="service-num">03</span>
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          </div>
+          <h3 class="service-title">Financial Modeling</h3>
+          <p class="service-desc">Rigorous, dynamic models that become your operating compass. We build bottom-up financial models that reflect the true drivers of your business and support confident decision-making.</p>
+          <div class="service-tags">
+            <span>3-Statement Models</span>
+            <span>Scenario Analysis</span>
+            <span>Unit Economics</span>
+            <span>Forecasting</span>
+          </div>
+        </div>
+
+        <div class="service-card reveal reveal-delay-3">
+          <span class="service-num">04</span>
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="service-title">M&amp;A Advisory</h3>
+          <p class="service-desc">Buy-side and sell-side support for strategic transactions. We manage the financial and analytical aspects of M&amp;A, ensuring your interests are protected and value is maximized.</p>
+          <div class="service-tags">
+            <span>Due Diligence</span>
+            <span>Valuation</span>
+            <span>Deal Structuring</span>
+            <span>Integration</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Philosophy ── -->
+  <section class="section-pad philosophy-bg" id="philosophy">
+    <div class="container">
+      <div class="philosophy-inner">
+        <div class="philosophy-left">
+          <div class="section-label reveal">Our Philosophy</div>
+          <h2 class="philosophy-title reveal reveal-delay-1">
+            Principles that<br>guide every<br><em>engagement</em>.
+          </h2>
+          <p class="philosophy-sub reveal reveal-delay-2">We believe that great financial leadership is a force multiplier for every other part of your business.</p>
+        </div>
+        <div class="pillars">
+          <div class="pillar reveal">
+            <span class="pillar-num">01</span>
+            <div>
+              <h4>Embedded Partnership</h4>
+              <p>We don't operate from the outside. We become a genuine part of your team — understanding your culture, your goals, and your challenges as intimately as any full-time executive would.</p>
+            </div>
+          </div>
+          <div class="pillar reveal reveal-delay-1">
+            <span class="pillar-num">02</span>
+            <div>
+              <h4>Clarity Over Complexity</h4>
+              <p>Finance should illuminate, not obscure. We translate complexity into clear, actionable insight — for your board, your team, and yourself. If a metric doesn't drive a decision, it's noise.</p>
+            </div>
+          </div>
+          <div class="pillar reveal reveal-delay-2">
+            <span class="pillar-num">03</span>
+            <div>
+              <h4>Stage-Appropriate Strategy</h4>
+              <p>The financial needs of a seed-stage company are fundamentally different from a Series B. We tailor our approach, tools, and focus to exactly where you are and where you're going.</p>
+            </div>
+          </div>
+          <div class="pillar reveal reveal-delay-3">
+            <span class="pillar-num">04</span>
+            <div>
+              <h4>Long-Term Alignment</h4>
+              <p>Our success is your success. We measure our value not by hours billed but by the outcomes we help you achieve — from your next raise to your eventual exit.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why Convivium ── -->
+  <section class="section-pad">
+    <div class="container">
+      <div class="section-label reveal">Why Us</div>
+      <h2 class="section-title reveal reveal-delay-1">Built for the way<br>startups <em>actually work</em>.</h2>
+      <div class="why-divider"></div>
+      <div class="why-grid">
+        <div class="why-item reveal">
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h4>Operator-First Mindset</h4>
+          <p>We've sat in the CFO seat — not just advised from the sideline. That experience means we anticipate challenges before they arise and bring pragmatic solutions, not theoretical frameworks.</p>
+        </div>
+        <div class="why-item reveal reveal-delay-1">
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <h4>Deep Tech Sector Focus</h4>
+          <p>From SaaS to deep tech, consumer apps to enterprise software — we understand the unit economics, growth models, and investor expectations unique to technology businesses.</p>
+        </div>
+        <div class="why-item reveal reveal-delay-2">
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h4>Proven Track Record</h4>
+          <p>Our clients have successfully raised Series A through Series C rounds from top-tier venture capital firms, completed strategic acquisitions, and achieved profitable exits.</p>
+        </div>
+        <div class="why-item reveal reveal-delay-3">
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h4>Speed When It Counts</h4>
+          <p>Fundraising windows close fast. Board meetings don't wait. We operate at startup speed — responsive, decisive, and always prepared for the moments that matter most.</p>
+        </div>
+        <div class="why-item reveal reveal-delay-4">
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"/><path d="M12 17v4"/></svg>
+          </div>
+          <h4>Flexible Engagement Models</h4>
+          <p>Monthly retainers, project-based engagements, or hourly advisory — we structure our work around your needs and budget, not the other way around.</p>
+        </div>
+        <div class="why-item reveal reveal-delay-5">
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h4>Network &amp; Connections</h4>
+          <p>Beyond financial expertise, we bring an active network of investors, bankers, attorneys, and operators that can open doors and accelerate your path to growth.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Process ── -->
+  <section class="section-pad process-bg" id="process">
+    <div class="container">
+      <div class="section-label reveal">How We Work</div>
+      <h2 class="section-title reveal reveal-delay-1">From introduction<br>to <em>impact</em>.</h2>
+      <div class="process-steps">
+        <div class="process-step reveal">
+          <div class="step-dot">1</div>
+          <h4>Discovery</h4>
+          <p>We start by listening — understanding your business model, financial position, team dynamics, and goals. No assumptions, no cookie-cutter solutions.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-1">
+          <div class="step-dot">2</div>
+          <h4>Assessment</h4>
+          <p>A comprehensive financial health review covering your current state, gaps, and highest-leverage opportunities. Delivered within the first two weeks.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-2">
+          <div class="step-dot">3</div>
+          <h4>Activation</h4>
+          <p>We hit the ground running — building systems, models, and cadences that immediately add value to your operations and your board relationships.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-3">
+          <div class="step-dot">4</div>
+          <h4>Partnership</h4>
+          <p>An ongoing relationship that scales with you. As your business evolves, we evolve with it — always focused on the next milestone on your growth journey.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Testimonials ── -->
+  <section class="section-pad testimonials-bg">
+    <div class="container">
+      <div class="testimonials-inner">
+        <div class="testimonials-left">
+          <div class="section-label reveal">What Founders Say</div>
+          <h2 class="section-title reveal reveal-delay-1">
+            Trusted by<br>builders who<br><em>move fast</em>.
+          </h2>
+          <p class="reveal reveal-delay-2">Don't take our word for it. Here's what the founders we partner with have to say about working with Convivium Advisors.</p>
+        </div>
+        <div class="testimonial-cards">
+          <div class="testimonial-card reveal">
+            <span class="quote-mark">"</span>
+            <blockquote>Convivium gave us the financial foundation we needed to close our Series A with confidence. Their knowledge of what investors actually want to see is invaluable.</blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar">SR</div>
+              <div class="author-info">
+                <strong>Sarah R.</strong>
+                <span>CEO, SaaS Platform · Series A</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card reveal reveal-delay-1">
+            <span class="quote-mark">"</span>
+            <blockquote>We went from messy spreadsheets to board-ready financials in under 30 days. Vanessa doesn't just build models — she helps you understand your own business better.</blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar">MK</div>
+              <div class="author-info">
+                <strong>Marcus K.</strong>
+                <span>Co-Founder, FinTech Startup · Seed</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card reveal reveal-delay-2">
+            <span class="quote-mark">"</span>
+            <blockquote>Having Convivium in our corner during our acquisition process was a game-changer. Their diligence support and negotiation guidance added millions to our final outcome.</blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar">JP</div>
+              <div class="author-info">
+                <strong>James P.</strong>
+                <span>Founder, Enterprise Software · Exit</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Team ── -->
+  <section class="section-pad" id="team">
+    <div class="container">
+      <div class="team-header">
+        <div>
+          <div class="section-label reveal">The Team</div>
+          <h2 class="section-title reveal reveal-delay-1">Experience you<br>can <em>count on</em>.</h2>
+        </div>
+        <p class="reveal reveal-delay-2" style="max-width:340px; font-size:0.9rem; line-height:1.8; color:var(--text-muted);">Our advisors bring decades of CFO, investment banking, and operating experience to every engagement.</p>
+      </div>
+      <div class="team-grid">
+        <div class="team-card reveal">
+          <div class="team-photo">
+            <div class="team-photo-inner">
+              <span class="team-initials">VR</span>
+            </div>
+            <div class="team-overlay">
+              <p>Former CFO at multiple high-growth SaaS companies. Expert in fundraising, financial modeling, and board advisory. Led companies through Series A, B, and strategic exits.</p>
+            </div>
+          </div>
+          <div class="team-info">
+            <h4>Vanessa Rollings</h4>
+            <span>Founder & Principal Advisor</span>
+          </div>
+        </div>
+        <div class="team-card reveal reveal-delay-1">
+          <div class="team-photo">
+            <div class="team-photo-inner" style="background: linear-gradient(135deg, rgba(153,155,91,0.12), rgba(15,53,53,0.08));">
+              <span class="team-initials">DM</span>
+            </div>
+            <div class="team-overlay">
+              <p>10+ years in investment banking and corporate finance. Specializes in M&amp;A transactions, capital markets, and financial due diligence for technology companies.</p>
+            </div>
+          </div>
+          <div class="team-info">
+            <h4>David M.</h4>
+            <span>Senior Financial Advisor</span>
+          </div>
+        </div>
+        <div class="team-card reveal reveal-delay-2">
+          <div class="team-photo">
+            <div class="team-photo-inner" style="background: linear-gradient(135deg, rgba(195,200,186,0.18), rgba(15,53,53,0.06));">
+              <span class="team-initials">AC</span>
+            </div>
+            <div class="team-overlay">
+              <p>Operational finance specialist with deep expertise in building scalable accounting systems, FP&amp;A processes, and financial infrastructure for high-growth startups.</p>
+            </div>
+          </div>
+          <div class="team-info">
+            <h4>Alexandra C.</h4>
+            <span>FP&A & Operations Lead</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Clients ── -->
+  <section class="section-pad-sm clients-bg">
+    <div class="container">
+      <p class="clients-label reveal">Trusted by founders backed by</p>
+      <div class="clients-row">
+        <span class="client-logo reveal">Andreessen Horowitz</span>
+        <span class="client-logo reveal reveal-delay-1">Sequoia Capital</span>
+        <span class="client-logo reveal reveal-delay-2">Bessemer Venture</span>
+        <span class="client-logo reveal reveal-delay-3">General Catalyst</span>
+        <span class="client-logo reveal reveal-delay-4">Accel Partners</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="section-pad cta-bg">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="section-label reveal">Let's Talk</div>
+        <h2 class="section-title reveal reveal-delay-1">Ready to build on<br>solid financial ground?</h2>
+        <p class="reveal reveal-delay-2">Schedule a complimentary 30-minute consultation to discuss your company's needs and how Convivium can help you reach your next milestone.</p>
+        <div class="cta-actions reveal reveal-delay-3">
+          <a href="#contact" class="btn-white">
+            Schedule a Call
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="mailto:hello@conviviumadvisors.com" class="btn-outline-white">Send an Email</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section class="section-pad" id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-left">
+          <div class="section-label reveal">Get In Touch</div>
+          <h2 class="section-title reveal reveal-delay-1">Start the<br><em>conversation</em>.</h2>
+          <p class="reveal reveal-delay-2">Whether you're raising your next round, navigating a strategic decision, or simply need to make sense of your financials — we'd love to hear from you.</p>
+          <div class="contact-details">
+            <div class="contact-item reveal reveal-delay-3">
+              <div class="contact-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="contact-item-text">
+                <strong>Email</strong>
+                <a href="mailto:hello@conviviumadvisors.com">hello@conviviumadvisors.com</a>
+              </div>
+            </div>
+            <div class="contact-item reveal reveal-delay-4">
+              <div class="contact-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="contact-item-text">
+                <strong>Location</strong>
+                <span>San Francisco, CA · Remote Engagements Welcome</span>
+              </div>
+            </div>
+            <div class="contact-item reveal reveal-delay-5">
+              <div class="contact-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+              <div class="contact-item-text">
+                <strong>Availability</strong>
+                <span>Accepting new clients · Typical response within 24hrs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form reveal reveal-delay-2">
+          <form onsubmit="handleSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" placeholder="Jane" required />
+              </div>
+              <div class="form-group">
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" placeholder="Smith" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="jane@yourstartup.com" required />
+            </div>
+            <div class="form-group">
+              <label for="company">Company</label>
+              <input type="text" id="company" placeholder="Your Startup" />
+            </div>
+            <div class="form-group">
+              <label for="stage">Company Stage</label>
+              <select id="stage">
+                <option value="" disabled selected>Select your stage</option>
+                <option>Pre-Seed</option>
+                <option>Seed</option>
+                <option>Series A</option>
+                <option>Series B</option>
+                <option>Series C+</option>
+                <option>Growth / Pre-IPO</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="service">How Can We Help?</label>
+              <select id="service">
+                <option value="" disabled selected>Select a service</option>
+                <option>Fractional CFO</option>
+                <option>Fundraising Advisory</option>
+                <option>Financial Modeling</option>
+                <option>M&A Advisory</option>
+                <option>Other / Not Sure Yet</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Tell Us More</label>
+              <textarea id="message" placeholder="Briefly describe your situation and what you're looking for..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">
+              Send Message
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo">
+            <span class="logo-mark">CA</span>
+            Convivium Advisors
+          </a>
+          <p>Strategic advisory and fractional CFO services for early-stage, high-growth technology companies.</p>
+          <div class="footer-social">
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter/X">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Services</h5>
+          <ul>
+            <li><a href="#services">Fractional CFO</a></li>
+            <li><a href="#services">Fundraising Advisory</a></li>
+            <li><a href="#services">Financial Modeling</a></li>
+            <li><a href="#services">M&A Advisory</a></li>
+            <li><a href="#services">Board Reporting</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="mailto:hello@conviviumadvisors.com">hello@conviviumadvisors.com</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">Schedule a Call</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Convivium Advisors. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Custom Cursor ──
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top  = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top  = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .service-card, .team-card, .testimonial-card').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.classList.add('hovered'); cursorRing.classList.add('hovered'); });
+      el.addEventListener('mouseleave', () => { cursor.classList.remove('hovered'); cursorRing.classList.remove('hovered'); });
+    });
+
+    // ── Nav scroll ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ── Mobile menu ──
+    const mobileMenu = document.getElementById('mobileMenu');
+    document.getElementById('navToggle').addEventListener('click', () => mobileMenu.classList.add('open'));
+    document.getElementById('mobileClose').addEventListener('click', () => mobileMenu.classList.remove('open'));
+    function closeMobile() { mobileMenu.classList.remove('open'); }
+
+    // ── Scroll reveal ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Smooth anchor scroll ──
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // ── Form submit ──
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      btn.textContent = 'Message Sent ✓';
+      btn.style.background = 'var(--olive)';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.innerHTML = 'Send Message <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 3000);
+    }
+
+    // ── Hero stats counter animation ──
+    function animateCounter(el, target, suffix) {
+      let start = 0;
+      const duration = 2000;
+      const startTime = performance.now();
+      function update(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * target);
+        el.textContent = current + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const nums = e.target.querySelectorAll('.hero-stat-number');
+          const data = [
+            { target: 50, suffix: '+' },
+            { target: 2, suffix: 'B+', prefix: '$' },
+            { target: 18, suffix: 'yr' }
+          ];
+          nums.forEach((el, i) => {
+            if (i === 1) {
+              let s = 0;
+              const d = 2000;
+              const st = performance.now();
+              function u(now) {
+                const p = Math.min((now - st) / d, 1);
+                const ep = 1 - Math.pow(1 - p, 3);
+                el.textContent = '$' + Math.round(ep * 2) + 'B+';
+                if (p < 1) requestAnimationFrame(u);
+              }
+              requestAnimationFrame(u);
+            } else {
+              animateCounter(el, data[i].target, data[i].suffix);
+            }
+          });
+          statsObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const heroStats = document.querySelector('.hero-stats');
+    if (heroStats) statsObserver.observe(heroStats);
+  </script>
+</body>
+</html>
