@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GC Futures Terminal — ICT / SMC</title>
+<title>Futures Terminal — ICT / SMC</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -39,6 +39,7 @@
   @keyframes cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
   @keyframes bar-in { from{transform:scaleX(0)} to{transform:scaleX(1)} }
   @keyframes shimmer-move { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+  @keyframes fade-in { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
   .breathe    { animation: breathe 2s ease-in-out infinite; }
   .float-badge { animation: float 3s ease-in-out infinite; }
   .ticker-inner { display:flex; white-space:nowrap; animation: scroll-left 38s linear infinite; }
@@ -48,6 +49,80 @@
     background: #BA7517; margin-left: 1px; vertical-align: text-bottom;
     animation: cursor-blink .9s step-end infinite;
   }
+
+  /* Symbol tabs */
+  .sym-tabs {
+    display: flex; gap: 3px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px; padding: 3px;
+  }
+  .sym-tab {
+    padding: 5px 14px; border: none; background: transparent;
+    color: #555; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 600; letter-spacing: .04em;
+    border-radius: 7px; cursor: pointer; transition: all .15s;
+  }
+  .sym-tab:hover { color: #888; }
+  .sym-tab.active { background: #1E1E21; color: #F0F0F0; }
+
+  /* Chart-type tabs */
+  .chart-tab {
+    padding: 3px 9px; border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: transparent; color: #555;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; cursor: pointer; transition: all .15s;
+  }
+  .chart-tab:hover { border-color: #BA7517; color: #BA7517; }
+  .chart-tab.active { background: rgba(240,180,41,0.10); border-color: rgba(240,180,41,0.3); color: #F0B429; }
+
+  /* Settings */
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08); background: transparent;
+    color: #555; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s; flex-shrink: 0;
+  }
+  .icon-btn:hover { border-color: rgba(255,255,255,0.2); color: #999; }
+  .settings-panel { display: none; animation: fade-in .2s ease; }
+  .settings-panel.open { display: block; }
+  .settings-input {
+    width: 100%; padding: 9px 12px; border-radius: 8px;
+    background: rgba(0,0,0,0.4); color: #D0D0D0;
+    border: 1px solid rgba(255,255,255,0.08);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    outline: none; transition: border-color .15s;
+  }
+  .settings-input:focus { border-color: rgba(240,180,41,0.3); }
+  .btn-primary {
+    padding: 7px 18px; border-radius: 8px;
+    border: 1px solid rgba(240,180,41,0.3);
+    background: rgba(240,180,41,0.1); color: #F0B429;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; font-weight: 600; cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-primary:hover { background: rgba(240,180,41,0.2); }
+  .btn-ghost {
+    padding: 7px 14px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: transparent; color: #888;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; cursor: pointer; transition: all .15s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: #D0D0D0; }
+
+  .conn-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    background: #333; transition: background .3s;
+  }
+  .conn-dot.live      { background: #639922; animation: breathe 2s ease-in-out infinite; }
+  .conn-dot.loading   { background: #F0B429; animation: breathe 1s ease-in-out infinite; }
+  .conn-dot.error     { background: #EF4444; }
+  .conn-dot.demo      { background: #BA7517; }
+
+  /* Checklist */
   .check-row {
     display: flex; align-items: center; gap: 10px;
     padding: 7px 8px; border-radius: 8px; cursor: pointer;
@@ -62,6 +137,8 @@
     transition: all .2s; flex-shrink: 0;
   }
   .check-box.on { border-color: #3B6D11; background: rgba(99,153,34,0.18); }
+
+  /* Tags */
   .tag {
     padding: 3px 9px; border-radius: 6px;
     background: rgba(255,255,255,0.04);
@@ -71,27 +148,61 @@
     transition: all .15s;
   }
   .tag:hover { border-color: #BA7517; color: #BA7517; }
+
   .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
   .bottom-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     .main-grid, .bottom-grid { grid-template-columns: 1fr; }
+    .sym-tabs { flex-wrap: wrap; }
   }
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<div style="display:flex;justify-content:space-between;align-items:center;padding:4px;">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:4px;gap:12px;flex-wrap:wrap;">
   <div style="display:flex;align-items:center;gap:10px;">
-    <div style="width:30px;height:30px;border-radius:8px;background:#2A1F07;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#F0B429;font-family:'JetBrains Mono',monospace;flex-shrink:0;">Au</div>
+    <div id="symbol-icon" style="width:30px;height:30px;border-radius:8px;background:#2A1F07;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#F0B429;font-family:'JetBrains Mono',monospace;flex-shrink:0;">Au</div>
     <div>
-      <div style="font-size:14px;font-weight:600;letter-spacing:-.02em;line-height:1.2;">GC Futures Terminal</div>
-      <div style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;">Micro gold · ICT / SMC</div>
+      <div style="font-size:14px;font-weight:600;letter-spacing:-.02em;line-height:1.2;">Futures Terminal</div>
+      <div style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;">ICT / SMC · Finnhub feed</div>
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;">
-    <div class="breathe" style="width:7px;height:7px;border-radius:50%;background:#639922;flex-shrink:0;"></div>
-    <span style="font-size:11px;color:#444;font-family:'JetBrains Mono',monospace;letter-spacing:.05em;">LIVE · NY SESSION</span>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <div class="sym-tabs">
+      <button class="sym-tab active" data-sym="GC1!" onclick="switchSymbol('GC1!')">GC1!</button>
+      <button class="sym-tab" data-sym="NQ" onclick="switchSymbol('NQ')">NQ</button>
+      <button class="sym-tab" data-sym="ES" onclick="switchSymbol('ES')">ES</button>
+    </div>
+    <button class="icon-btn" onclick="toggleSettings()" title="API settings" aria-label="Settings">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div id="conn-dot" class="conn-dot demo"></div>
+      <span id="conn-label" style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;letter-spacing:.05em;">DEMO MODE</span>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div id="settings-panel" class="settings-panel card">
+  <div style="font-size:11.5px;font-weight:600;letter-spacing:.06em;color:#888;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:14px;">Finnhub API key</div>
+  <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px;">
+    <div style="flex:1;min-width:240px;">
+      <div class="label" style="margin-bottom:6px;">API Key</div>
+      <input id="input-key" class="settings-input" type="password" placeholder="paste your Finnhub key" autocomplete="off" spellcheck="false">
+    </div>
+    <button class="btn-primary" onclick="saveApiKey()">Save &amp; Connect</button>
+    <button class="btn-ghost" onclick="clearApiKey()">Clear</button>
+  </div>
+  <div style="font-size:11px;color:#444;font-family:'JetBrains Mono',monospace;line-height:1.5;">
+    Free tier · 60 req/min · ETF proxies: GC1!→GLD · NQ→QQQ · ES→SPY · Get a key at finnhub.io
+  </div>
+  <div style="margin-top:10px;padding:8px 12px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.12);">
+    <span style="font-size:10.5px;color:#A55757;font-family:'JetBrains Mono',monospace;">Stored in browser localStorage. Anyone with access to this site source can read it — use a data-only key.</span>
   </div>
 </div>
 
@@ -101,18 +212,26 @@
   <!-- PRICE HERO -->
   <div class="card" style="position:relative;overflow:hidden;">
     <div style="position:absolute;top:0;right:0;width:220px;height:180px;background:radial-gradient(circle at 80% 20%,rgba(240,180,41,0.06) 0%,transparent 70%);pointer-events:none;"></div>
-    <div class="label">Gold continuous (GC1!) — USD / troy oz</div>
-    <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:6px;">
-      <div id="price-el" class="mono" style="font-size:52px;font-weight:700;line-height:1;letter-spacing:-.04em;color:#F0F0F0;">$3,249.60</div>
-      <div id="delta-el" style="font-size:14px;font-weight:600;color:#639922;margin-bottom:8px;display:flex;align-items:center;gap:3px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+      <div class="label" id="price-label" style="margin-bottom:0;">Gold (GC1!) — via GLD ETF proxy</div>
+      <div style="display:flex;gap:4px;">
+        <button class="chart-tab active" data-type="line" onclick="switchChart('line')">Line</button>
+        <button class="chart-tab" data-type="1m" onclick="switchChart('1m')">1m</button>
+        <button class="chart-tab" data-type="5m" onclick="switchChart('5m')">5m</button>
+        <button class="chart-tab" data-type="15m" onclick="switchChart('15m')">15m</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:14px;margin:12px 0 6px;">
+      <div id="price-el" class="mono" style="font-size:48px;font-weight:700;line-height:1;letter-spacing:-.04em;color:#F0F0F0;">—</div>
+      <div id="delta-el" style="font-size:14px;font-weight:600;color:#555;margin-bottom:7px;display:flex;align-items:center;gap:3px;">
         <svg id="delta-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/>
         </svg>
-        <span id="delta-text">+1.47%</span>
+        <span id="delta-text">—</span>
       </div>
     </div>
-    <div class="mono" style="font-size:11px;color:#383838;margin-bottom:14px;">ATH $3,501.40 · Target $3,271 · Stop $3,218</div>
-    <svg id="spark" viewBox="0 0 400 70" preserveAspectRatio="none" style="width:100%;height:70px;display:block;"></svg>
+    <div class="mono" id="levels-el" style="font-size:11px;color:#383838;margin-bottom:14px;">Loading market data…</div>
+    <svg id="chart-svg" viewBox="0 0 400 100" preserveAspectRatio="none" style="width:100%;height:100px;display:block;"></svg>
     <div style="height:1px;background:rgba(255,255,255,0.05);margin-top:14px;border-radius:1px;overflow:hidden;">
       <div style="height:100%;background:linear-gradient(90deg,transparent,rgba(240,180,41,0.4),transparent);animation:shimmer-move 2.5s ease-in-out infinite;width:40%;"></div>
     </div>
@@ -123,12 +242,12 @@
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
         <div style="font-size:13px;font-weight:600;letter-spacing:-.015em;">ICT checklist</div>
-        <div id="criteria-count" class="mono" style="font-size:11px;color:#444;margin-top:2px;">4 / 6 criteria met</div>
+        <div id="criteria-count" class="mono" style="font-size:11px;color:#444;margin-top:2px;">0 / 6 criteria met</div>
       </div>
-      <div id="valid-badge" style="padding:3px 10px;border-radius:100px;background:rgba(99,153,34,0.18);color:#639922;font-size:10.5px;font-weight:700;letter-spacing:.07em;">VALID</div>
+      <div id="valid-badge" style="padding:3px 10px;border-radius:100px;background:rgba(239,68,68,0.15);color:#EF4444;font-size:10.5px;font-weight:700;letter-spacing:.07em;">WAIT</div>
     </div>
     <div style="height:3px;background:rgba(255,255,255,0.05);border-radius:2px;margin-bottom:14px;overflow:hidden;">
-      <div id="progress-bar" style="height:100%;border-radius:2px;width:66%;background:#639922;transform-origin:left;animation:bar-in .6s cubic-bezier(.16,1,.3,1) both;transition:width .4s ease,background .3s ease;"></div>
+      <div id="progress-bar" style="height:100%;border-radius:2px;width:0%;background:#F0B429;transform-origin:left;animation:bar-in .6s cubic-bezier(.16,1,.3,1) both;transition:width .4s ease,background .3s ease;"></div>
     </div>
     <div id="checklist-items" style="display:flex;flex-direction:column;gap:2px;flex:1;"></div>
   </div>
@@ -144,48 +263,17 @@
       <span style="color:#F0B429;margin-right:8px;font-size:15px;">›</span>
       <span id="typewriter-el"></span><span class="cursor"></span>
     </div>
-    <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
-      <div class="tag">4H bias</div>
-      <div class="tag">FVG scan</div>
-      <div class="tag">OTE level</div>
-      <div class="tag">liquidity</div>
-      <div class="tag">iFVG</div>
-    </div>
+    <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;" id="analysis-tags"></div>
   </div>
 
   <!-- SESSIONS + BIAS -->
   <div class="card">
     <div class="label">Market sessions</div>
-    <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:18px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="display:flex;align-items:center;gap:9px;">
-          <div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.1);flex-shrink:0;"></div>
-          <span style="font-size:13px;color:#444;">Tokyo</span>
-        </div>
-        <span class="mono" style="font-size:11px;color:#2A2A2A;">CLOSED</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="display:flex;align-items:center;gap:9px;">
-          <div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.1);flex-shrink:0;"></div>
-          <span style="font-size:13px;color:#444;">London</span>
-        </div>
-        <span class="mono" style="font-size:11px;color:#2A2A2A;">CLOSED</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="display:flex;align-items:center;gap:9px;">
-          <div class="breathe" style="width:7px;height:7px;border-radius:50%;background:#639922;flex-shrink:0;"></div>
-          <span style="font-size:13px;color:#D8D8D8;font-weight:500;">New York</span>
-        </div>
-        <span class="mono" style="font-size:11px;color:#639922;">OPEN</span>
-      </div>
-    </div>
+    <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:18px;" id="sessions-list"></div>
     <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;">
       <div class="label" style="margin-bottom:9px;">Intraday bias</div>
-      <div class="float-badge" style="display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:100px;background:rgba(99,153,34,0.15);border:1px solid rgba(99,153,34,0.25);color:#97C459;font-size:13px;font-weight:700;letter-spacing:.1em;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/>
-        </svg>
-        BULLISH
+      <div id="bias-badge" class="float-badge" style="display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:100px;background:rgba(80,80,80,0.15);border:1px solid rgba(255,255,255,0.1);color:#888;font-size:13px;font-weight:700;letter-spacing:.1em;">
+        NEUTRAL
       </div>
     </div>
   </div>
@@ -207,117 +295,615 @@
 </div>
 
 <script>
-var TICKER = [
-  "FOMC minutes: no rate change expected Q2 2026",
-  "GC1! ATH: $3,501.40 — April 17, 2026",
-  "NFP: +187K  ·  exp +210K — stagflation signal active",
-  "ISM services PMI: 49.8 — below expansion threshold",
-  "Powell (Harvard): patient stance on rate cuts",
-  "DXY: 98.72 — 2-year low, tailwind for gold",
-  "4H FVG: $3,228–$3,231  ·  draw on liquidity: $3,271",
-  "ADP: +142K — labor market cooling continues",
-  "10Y yield: 4.21% — safe haven flows confirmed",
-  "CFTC CoT: net long positioning increasing for GC",
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+var FINNHUB_REST = 'https://finnhub.io/api/v1';
+var FINNHUB_WS   = 'wss://ws.finnhub.io';
+
+var SYMBOLS = {
+  'GC1!': {
+    fh: 'GLD', icon: 'Au', iconBg: '#2A1F07', iconColor: '#F0B429',
+    label: 'Gold (GC1!) — via GLD ETF proxy',
+    demoStart: 295.40, demoVol: 0.45
+  },
+  'NQ': {
+    fh: 'QQQ', icon: 'NQ', iconBg: '#0A1A2A', iconColor: '#4DA3FF',
+    label: 'Nasdaq 100 (NQ) — via QQQ ETF proxy',
+    demoStart: 478.20, demoVol: 0.85
+  },
+  'ES': {
+    fh: 'SPY', icon: 'ES', iconBg: '#0A2A1A', iconColor: '#4DDB8A',
+    label: 'S&P 500 (ES) — via SPY ETF proxy',
+    demoStart: 530.10, demoVol: 0.55
+  }
+};
+
+var CHECKLISTS = {
+  'GC1!': [
+    {id:1, label:'IFVG identified',           checked:false},
+    {id:2, label:'Liquidity sweep confirmed', checked:false},
+    {id:3, label:'SMT w/ MES',                checked:false},
+    {id:4, label:'HTF PD-Array alignment',    checked:false},
+    {id:5, label:'Premium / discount zone',   checked:false},
+    {id:6, label:'Adequate risk (R:R > 3)',   checked:false}
+  ],
+  'NQ': [
+    {id:1, label:'IFVG identified',           checked:false},
+    {id:2, label:'Liquidity sweep confirmed', checked:false},
+    {id:3, label:'SMT w/ ES',                 checked:false},
+    {id:4, label:'HTF PD-Array alignment',    checked:false},
+    {id:5, label:'Premium / discount zone',   checked:false},
+    {id:6, label:'Adequate risk (R:R > 3)',   checked:false}
+  ],
+  'ES': [
+    {id:1, label:'IFVG identified',           checked:false},
+    {id:2, label:'Liquidity sweep confirmed', checked:false},
+    {id:3, label:'SMT w/ NQ',                 checked:false},
+    {id:4, label:'HTF PD-Array alignment',    checked:false},
+    {id:5, label:'Premium / discount zone',   checked:false},
+    {id:6, label:'Adequate risk (R:R > 3)',   checked:false}
+  ]
+};
+
+var PROMPTS = {
+  'GC1!': [
+    'Scanning buy-side liquidity above HTF resistance…',
+    'IFVG zone validated — entry confluence forming.',
+    '4H FVG fill complete. OTE at 61.8% in play.',
+    'SMT divergence w/ MES flagged — bullish.',
+    'HTF PD-Array: monthly breaker active. Bias UP.',
+    'Liquidity sweep absorbed below swing low.'
+  ],
+  'NQ': [
+    'Scanning sell-side liquidity below daily lows…',
+    'Buyside liquidity resting above prior session high.',
+    '4H FVG detected — monitoring for displacement.',
+    'SMT divergence w/ ES confirmed — watch reversal.',
+    'NWOG gap in play. Targeting equilibrium.',
+    'Premium array reached — expect retracement.'
+  ],
+  'ES': [
+    'Scanning liquidity pools above session high…',
+    '4H IFVG: valid PD-Array — confluence forming.',
+    'SMT w/ NQ diverging — directional bias loading.',
+    'Institutional order flow: net long bias active.',
+    'HTF breaker block tested — watching reaction.',
+    'Discount array identified — expecting bid.'
+  ]
+};
+
+var TAGS = {
+  'GC1!': ['4H bias','FVG scan','OTE level','liquidity','iFVG'],
+  'NQ':   ['4H bias','FVG scan','NWOG gap','buyside','iFVG'],
+  'ES':   ['4H bias','FVG scan','breaker','liquidity','iFVG']
+};
+
+var TICKER_ITEMS = [
+  'FOMC minutes: rate path watched into Q3',
+  'GLD: 52w high tested · gold demand persistent',
+  'NFP +187K · ISM services 49.8 — mixed signals',
+  'Powell: patient stance on rate cuts',
+  'DXY: weakness supports risk + commodity flows',
+  'QQQ flows: net long positioning into earnings',
+  'SPY: liquidity above daily highs · bias up',
+  '10Y yield steady — risk on',
+  'CFTC CoT: spec longs increasing on metals',
+  'VIX compressed · structure leans risk-on'
 ];
 
-var PROMPTS = [
-  "Scanning buy-side liquidity above 3,271...",
-  "IFVG confirmed: 3,228–3,231. Valid entry zone.",
-  "4H FVG fill complete. Watching OTE at 61.8%.",
-  "SMT divergence w/ MES flagged at 14:32 NY — bullish.",
-  "HTF PD-Array: monthly breaker active. Bias UP.",
-  "Liquidity sweep below 3,218 absorbed. Long bias intact.",
-];
+var RES_MAP      = { 'line':'5', '1m':'1', '5m':'5', '15m':'15' };
+var LOOKBACK_HRS = { 'line':10,  '1m':3,   '5m':12,  '15m':36   };
+var REFRESH_MS   = { 'line':30000,'1m':30000,'5m':60000,'15m':120000 };
 
-var CHECKLIST = [
-  {id:1, label:"IFVG identified",           checked:true},
-  {id:2, label:"Liquidity sweep confirmed",  checked:true},
-  {id:3, label:"SMT w/ MES",                checked:false},
-  {id:4, label:"HTF PD-Array alignment",    checked:true},
-  {id:5, label:"Premium / discount zone",   checked:true},
-  {id:6, label:"Adequate risk (R:R > 3)",   checked:false},
-];
+// ─── STATE ───────────────────────────────────────────────────────────────────
+var apiKey         = localStorage.getItem('finnhub_key') || '';
+var currentSymbol  = 'GC1!';
+var currentChart   = 'line';
+var ws             = null;
+var bars           = [];
+var lineHist       = [];
+var latestPrice    = 0;
+var openPrice      = 0;
+var prevClose      = 0;
+var dayHigh        = 0;
+var dayLow         = 0;
+var dataMode       = 'demo';
+var demoTimer      = null;
+var refreshTimer   = null;
+var checklistState = {};
 
-var price = 3249.60, priceDelta = 1.47, priceHist = [];
-for(var i=0;i<70;i++){price+=(Math.random()-.47)*2.5;priceHist.push(price);}
+Object.keys(CHECKLISTS).forEach(function(s){
+  checklistState[s] = CHECKLISTS[s].map(function(i){ return Object.assign({},i); });
+});
 
-function drawSpark(){
-  var svg=document.getElementById("spark"); if(!svg)return;
-  var W=400,H=70,d=priceHist.slice(-70);
-  var mn=Math.min.apply(null,d)-1,mx=Math.max.apply(null,d)+1,rng=mx-mn;
-  var pts=d.map(function(v,i){return [i*(W/(d.length-1)),H-((v-mn)/rng)*(H-8)-4];});
-  var path=pts.map(function(p,i){return(i===0?"M":"L")+p[0].toFixed(1)+","+p[1].toFixed(1);}).join(" ");
-  var fill=path+" L"+pts[pts.length-1][0]+","+H+" L0,"+H+" Z";
-  svg.innerHTML='<defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F0B429" stop-opacity="0.22"/><stop offset="100%" stop-color="#F0B429" stop-opacity="0"/></linearGradient></defs>'
-    +'<path d="'+fill+'" fill="url(#gg)"/>'
-    +'<path d="'+path+'" fill="none" stroke="#F0B429" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
-    +'<circle cx="'+pts[pts.length-1][0]+'" cy="'+pts[pts.length-1][1]+'" r="4" fill="#F0B429"/>';
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function $(id){ return document.getElementById(id); }
+function fmt(n){ return '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+// ─── SETTINGS ────────────────────────────────────────────────────────────────
+function toggleSettings(){
+  var p = $('settings-panel');
+  p.classList.toggle('open');
+  if(p.classList.contains('open')){
+    $('input-key').value = apiKey ? '••••••••' + apiKey.slice(-4) : '';
+    $('input-key').focus();
+    $('input-key').select();
+  }
 }
 
+function saveApiKey(){
+  var v = $('input-key').value.trim();
+  if(v && !v.startsWith('••')){
+    apiKey = v;
+    localStorage.setItem('finnhub_key', apiKey);
+  }
+  $('settings-panel').classList.remove('open');
+  initData();
+}
+
+function clearApiKey(){
+  apiKey = '';
+  localStorage.removeItem('finnhub_key');
+  $('input-key').value = '';
+  $('settings-panel').classList.remove('open');
+  initData();
+}
+
+function setConn(state, label){
+  $('conn-dot').className = 'conn-dot ' + (state || '');
+  $('conn-label').textContent = label;
+}
+
+// ─── FINNHUB FETCH ───────────────────────────────────────────────────────────
+function fetchQuote(fhSymbol){
+  var url = FINNHUB_REST + '/quote?symbol=' + encodeURIComponent(fhSymbol) + '&token=' + apiKey;
+  return fetch(url).then(function(r){
+    if(!r.ok) throw new Error('quote ' + r.status);
+    return r.json();
+  });
+}
+
+function fetchCandles(fhSymbol, chartType){
+  var res  = RES_MAP[chartType] || '5';
+  var hrs  = LOOKBACK_HRS[chartType] || 10;
+  var to   = Math.floor(Date.now()/1000);
+  var from = to - hrs * 3600;
+  var url  = FINNHUB_REST + '/stock/candle'
+    + '?symbol=' + encodeURIComponent(fhSymbol)
+    + '&resolution=' + res
+    + '&from=' + from
+    + '&to=' + to
+    + '&token=' + apiKey;
+  return fetch(url).then(function(r){
+    if(!r.ok) throw new Error('candle ' + r.status);
+    return r.json();
+  }).then(function(d){
+    if(d.s !== 'ok' || !d.t || !d.t.length) return [];
+    return d.t.map(function(t,i){
+      return { t:t, o:d.o[i], h:d.h[i], l:d.l[i], c:d.c[i], v:d.v[i] };
+    });
+  });
+}
+
+// ─── WEBSOCKET ───────────────────────────────────────────────────────────────
+function disconnectWS(){
+  if(ws){ try { ws.close(); } catch(_) {} ws = null; }
+}
+
+function connectWS(fhSymbol){
+  disconnectWS();
+  ws = new WebSocket(FINNHUB_WS + '?token=' + encodeURIComponent(apiKey));
+  ws.onopen = function(){
+    ws.send(JSON.stringify({ type:'subscribe', symbol: fhSymbol }));
+  };
+  ws.onmessage = function(e){
+    var msg;
+    try { msg = JSON.parse(e.data); } catch(_) { return; }
+    if(msg.type === 'trade' && msg.data && msg.data.length){
+      var last = msg.data[msg.data.length - 1];
+      latestPrice = last.p;
+      if(latestPrice > dayHigh) dayHigh = latestPrice;
+      if(!dayLow || latestPrice < dayLow) dayLow = latestPrice;
+      lineHist.push(latestPrice);
+      if(lineHist.length > 200) lineHist.shift();
+      updatePriceDisplay();
+      if(currentChart === 'line') drawChart();
+    }
+    if(msg.type === 'error'){
+      setConn('error', 'WS ERR');
+    }
+  };
+  ws.onerror = function(){ setConn('error', 'WS ERR'); };
+  ws.onclose = function(){
+    if(dataMode === 'live') setConn('loading', 'RECONNECT');
+  };
+}
+
+// ─── DATA INIT ───────────────────────────────────────────────────────────────
+function clearTimers(){
+  if(demoTimer)    { clearInterval(demoTimer);    demoTimer = null;    }
+  if(refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+}
+
+function initData(){
+  clearTimers();
+  disconnectWS();
+
+  if(!apiKey){
+    dataMode = 'demo';
+    setConn('demo', 'DEMO MODE');
+    startDemo();
+    return;
+  }
+  dataMode = 'live';
+  setConn('loading', 'LOADING');
+
+  var sym = SYMBOLS[currentSymbol];
+  Promise.all([
+    fetchQuote(sym.fh),
+    fetchCandles(sym.fh, currentChart)
+  ]).then(function(results){
+    var q = results[0];
+    var c = results[1];
+    if(!q || typeof q.c !== 'number' || q.c === 0){
+      throw new Error('empty quote');
+    }
+    latestPrice = q.c;
+    openPrice   = q.o || q.pc || q.c;
+    prevClose   = q.pc;
+    dayHigh     = q.h || q.c;
+    dayLow      = q.l || q.c;
+    bars        = c;
+    lineHist    = c.length ? c.map(function(b){return b.c;}) : [latestPrice];
+    if(lineHist[lineHist.length-1] !== latestPrice) lineHist.push(latestPrice);
+
+    updatePriceDisplay();
+    drawChart();
+    setConn('live', 'LIVE');
+    connectWS(sym.fh);
+    refreshTimer = setInterval(refreshData, REFRESH_MS[currentChart] || 30000);
+  }).catch(function(err){
+    var msg = (err && err.message) || '';
+    setConn('error', msg.indexOf('401') >= 0 ? 'BAD KEY' : 'API ERR');
+    dataMode = 'demo';
+    setTimeout(function(){
+      setConn('demo', 'DEMO MODE');
+      startDemo();
+    }, 1500);
+  });
+}
+
+function refreshData(){
+  if(dataMode !== 'live') return;
+  var sym = SYMBOLS[currentSymbol];
+  fetchQuote(sym.fh).then(function(q){
+    if(q && typeof q.c === 'number'){
+      if(q.h)  dayHigh  = Math.max(dayHigh, q.h);
+      if(q.l)  dayLow   = dayLow ? Math.min(dayLow, q.l) : q.l;
+      if(q.o)  openPrice = q.o;
+      if(q.pc) prevClose = q.pc;
+      if(!latestPrice) latestPrice = q.c;
+      updatePriceDisplay();
+    }
+  }).catch(function(){});
+  if(currentChart !== 'line'){
+    fetchCandles(sym.fh, currentChart).then(function(c){
+      if(c.length){ bars = c; drawChart(); }
+    }).catch(function(){});
+  }
+}
+
+// ─── DEMO MODE ───────────────────────────────────────────────────────────────
+function startDemo(){
+  var sym = SYMBOLS[currentSymbol];
+  var p   = sym.demoStart;
+  var vol = sym.demoVol;
+
+  lineHist = [];
+  var px = p;
+  for(var i=0;i<80;i++){
+    px += (Math.random() - 0.49) * vol;
+    lineHist.push(px);
+  }
+
+  bars = [];
+  var bp = p;
+  for(var j=0;j<80;j++){
+    var o  = bp;
+    var hi = o + Math.random() * vol * 1.4;
+    var lo = o - Math.random() * vol * 1.4;
+    var cl = lo + Math.random() * (hi - lo);
+    bars.push({ t: Math.floor(Date.now()/1000) - (80-j)*60, o:o, h:hi, l:lo, c:cl, v:1000 });
+    bp = cl;
+  }
+
+  openPrice   = bars[0].o;
+  prevClose   = openPrice * (1 - (Math.random()*0.01 - 0.005));
+  latestPrice = lineHist[lineHist.length-1];
+  dayHigh     = Math.max.apply(null, bars.map(function(b){return b.h;}));
+  dayLow      = Math.min.apply(null, bars.map(function(b){return b.l;}));
+
+  updatePriceDisplay();
+  drawChart();
+
+  demoTimer = setInterval(function(){
+    var d = (Math.random() - 0.49) * vol;
+    latestPrice = Math.max(latestPrice * 0.5, latestPrice + d);
+    if(latestPrice > dayHigh) dayHigh = latestPrice;
+    if(latestPrice < dayLow)  dayLow  = latestPrice;
+    lineHist.push(latestPrice);
+    if(lineHist.length > 120) lineHist.shift();
+
+    if(bars.length){
+      if(Math.random() < 0.15){
+        var lastC = bars[bars.length-1].c;
+        bars.push({
+          t: Math.floor(Date.now()/1000),
+          o: lastC, h: Math.max(lastC, latestPrice),
+          l: Math.min(lastC, latestPrice), c: latestPrice, v: 500
+        });
+        if(bars.length > 120) bars.shift();
+      } else {
+        var lb = bars[bars.length-1];
+        lb.c = latestPrice;
+        if(latestPrice > lb.h) lb.h = latestPrice;
+        if(latestPrice < lb.l) lb.l = latestPrice;
+      }
+    }
+    updatePriceDisplay();
+    drawChart();
+  }, 1400);
+}
+
+// ─── PRICE DISPLAY ──────────────────────────────────────────────────────────
+function updatePriceDisplay(){
+  if(!latestPrice) return;
+  $('price-el').textContent = fmt(latestPrice);
+
+  var base = openPrice || prevClose || latestPrice;
+  var deltaPct = base ? ((latestPrice - base) / base) * 100 : 0;
+  var up = deltaPct >= 0;
+
+  $('delta-el').style.color = up ? '#639922' : '#EF4444';
+  $('delta-text').textContent = (up?'+':'') + deltaPct.toFixed(2) + '%';
+  $('delta-arrow').innerHTML = up
+    ? '<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/>'
+    : '<line x1="7" y1="7" x2="17" y2="17"/><polyline points="17,7 17,17 7,17"/>';
+
+  var levels = 'O ' + fmt(openPrice) + ' · H ' + fmt(dayHigh) + ' · L ' + fmt(dayLow);
+  if(prevClose) levels += ' · PC ' + fmt(prevClose);
+  $('levels-el').textContent = levels;
+
+  var b = $('bias-badge');
+  if(Math.abs(deltaPct) < 0.05){
+    b.style.background = 'rgba(80,80,80,0.15)';
+    b.style.borderColor = 'rgba(255,255,255,0.1)';
+    b.style.color = '#888';
+    b.textContent = 'NEUTRAL';
+  } else if(up){
+    b.style.background = 'rgba(99,153,34,0.15)';
+    b.style.borderColor = 'rgba(99,153,34,0.25)';
+    b.style.color = '#97C459';
+    b.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg> BULLISH';
+  } else {
+    b.style.background = 'rgba(239,68,68,0.12)';
+    b.style.borderColor = 'rgba(239,68,68,0.25)';
+    b.style.color = '#EF4444';
+    b.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,18 13.5,8.5 8.5,13.5 1,6"/><polyline points="17,18 23,18 23,12"/></svg> BEARISH';
+  }
+}
+
+// ─── CHART RENDERING ────────────────────────────────────────────────────────
+function drawLine(){
+  var svg = $('chart-svg');
+  if(!svg) return;
+  var W=400, H=100;
+  var d = lineHist.slice(-120);
+  if(d.length < 2){ svg.innerHTML = ''; return; }
+  var mn = Math.min.apply(null,d) - 0.001;
+  var mx = Math.max.apply(null,d) + 0.001;
+  var rng = mx - mn || 1;
+  var pts = d.map(function(v,i){
+    return [ i*(W/(d.length-1)), H - ((v-mn)/rng)*(H-12) - 6 ];
+  });
+  var path = pts.map(function(p,i){ return (i===0?'M':'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+  var fill = path + ' L' + pts[pts.length-1][0].toFixed(1) + ',' + H + ' L0,' + H + ' Z';
+  svg.innerHTML =
+    '<defs><linearGradient id="lgrad" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0%" stop-color="#F0B429" stop-opacity="0.22"/>'
+    + '<stop offset="100%" stop-color="#F0B429" stop-opacity="0"/></linearGradient></defs>'
+    + '<path d="' + fill + '" fill="url(#lgrad)"/>'
+    + '<path d="' + path + '" fill="none" stroke="#F0B429" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>'
+    + '<circle cx="' + pts[pts.length-1][0].toFixed(1) + '" cy="' + pts[pts.length-1][1].toFixed(1) + '" r="3.2" fill="#F0B429"/>';
+}
+
+function drawCandles(){
+  var svg = $('chart-svg');
+  if(!svg) return;
+  var W=400, H=100, PAD=4;
+  var d = bars.slice(-60);
+  if(!d.length){ svg.innerHTML = ''; return; }
+  var n = d.length;
+  var slot = (W - PAD*2) / n;
+  var cw   = Math.max(2, slot - 1.4);
+  var mn = Math.min.apply(null, d.map(function(b){return b.l;}));
+  var mx = Math.max.apply(null, d.map(function(b){return b.h;}));
+  var rng = mx - mn || 1;
+  function y(v){ return H - ((v - mn)/rng)*(H-10) - 5; }
+
+  var html = '';
+  d.forEach(function(b, i){
+    var x = PAD + i * slot;
+    var cx = x + cw/2;
+    var up = b.c >= b.o;
+    var stroke = up ? '#639922' : '#EF4444';
+    var fill   = up ? 'rgba(99,153,34,0.85)' : 'rgba(239,68,68,0.85)';
+    var yH = y(b.h), yL = y(b.l);
+    var yO = y(b.o), yC = y(b.c);
+    var top = Math.min(yO, yC);
+    var bh  = Math.max(1, Math.abs(yO - yC));
+    html += '<line x1="' + cx.toFixed(1) + '" y1="' + yH.toFixed(1) + '" x2="' + cx.toFixed(1) + '" y2="' + yL.toFixed(1) + '" stroke="' + stroke + '" stroke-width="1"/>';
+    html += '<rect x="' + x.toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + cw.toFixed(1) + '" height="' + bh.toFixed(1) + '" fill="' + fill + '" rx="0.5"/>';
+  });
+  svg.innerHTML = html;
+}
+
+function drawChart(){
+  if(currentChart === 'line') drawLine();
+  else drawCandles();
+}
+
+// ─── SYMBOL / CHART SWITCHING ───────────────────────────────────────────────
+function switchSymbol(sym){
+  if(sym === currentSymbol) return;
+  currentSymbol = sym;
+  document.querySelectorAll('.sym-tab').forEach(function(t){
+    t.classList.toggle('active', t.getAttribute('data-sym') === sym);
+  });
+  var s = SYMBOLS[sym];
+  $('price-label').textContent = s.label;
+  var ic = $('symbol-icon');
+  ic.textContent = s.icon;
+  ic.style.background = s.iconBg;
+  ic.style.color = s.iconColor;
+  $('price-el').textContent = '—';
+  $('delta-text').textContent = '—';
+  latestPrice = 0; openPrice = 0; dayHigh = 0; dayLow = 0; prevClose = 0;
+  bars = []; lineHist = [];
+  renderTags();
+  renderChecklist();
+  initData();
+}
+
+function switchChart(type){
+  if(type === currentChart) return;
+  currentChart = type;
+  document.querySelectorAll('.chart-tab').forEach(function(t){
+    t.classList.toggle('active', t.getAttribute('data-type') === type);
+  });
+  if(dataMode === 'live'){
+    var s = SYMBOLS[currentSymbol];
+    fetchCandles(s.fh, type).then(function(c){
+      if(c.length){
+        bars = c;
+        if(type === 'line') lineHist = c.map(function(b){return b.c;});
+      }
+      drawChart();
+    }).catch(function(){ drawChart(); });
+    if(refreshTimer) clearInterval(refreshTimer);
+    refreshTimer = setInterval(refreshData, REFRESH_MS[type] || 30000);
+  } else {
+    drawChart();
+  }
+}
+
+// ─── CHECKLIST ───────────────────────────────────────────────────────────────
 function renderChecklist(){
-  var el=document.getElementById("checklist-items"); if(!el) return;
-  var cnt=CHECKLIST.filter(function(i){return i.checked;}).length;
-  document.getElementById("criteria-count").textContent=cnt+" / "+CHECKLIST.length+" criteria met";
-  var pct=(cnt/CHECKLIST.length)*100;
-  document.getElementById("progress-bar").style.width=pct+"%";
-  document.getElementById("progress-bar").style.background=cnt>=5?"#639922":"#F0B429";
-  var badge=document.getElementById("valid-badge");
-  if(cnt>=5){badge.style.background="rgba(99,153,34,0.18)";badge.style.color="#639922";badge.textContent="VALID";}
-  else{badge.style.background="rgba(239,68,68,0.15)";badge.style.color="#EF4444";badge.textContent="WAIT";}
-  el.innerHTML=CHECKLIST.map(function(item){
-    return '<div class="check-row" onclick="toggleCheck('+item.id+')">'
-      +'<div class="check-box'+(item.checked?" on":"")+'">'+
-        (item.checked?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="#639922" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':'')
-      +'</div>'
-      +'<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+(item.checked?'#D0D0D0':'#333')+';">'+item.label+'</span>'
-      +'</div>';
-  }).join("");
+  var list = checklistState[currentSymbol];
+  var el = $('checklist-items');
+  if(!el) return;
+  var cnt = list.filter(function(i){return i.checked;}).length;
+  $('criteria-count').textContent = cnt + ' / ' + list.length + ' criteria met';
+  $('progress-bar').style.width = (cnt/list.length*100) + '%';
+  $('progress-bar').style.background = cnt >= 5 ? '#639922' : '#F0B429';
+  var bg = $('valid-badge');
+  if(cnt >= 5){
+    bg.style.background = 'rgba(99,153,34,0.18)';
+    bg.style.color = '#639922';
+    bg.textContent = 'VALID';
+  } else {
+    bg.style.background = 'rgba(239,68,68,0.15)';
+    bg.style.color = '#EF4444';
+    bg.textContent = 'WAIT';
+  }
+  el.innerHTML = list.map(function(item){
+    return '<div class="check-row" onclick="toggleCheck(' + item.id + ')">'
+      + '<div class="check-box' + (item.checked?' on':'') + '">'
+      + (item.checked
+          ? '<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="#639922" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '')
+      + '</div>'
+      + '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:' + (item.checked?'#D0D0D0':'#333') + ';">' + item.label + '</span>'
+      + '</div>';
+  }).join('');
 }
 
 function toggleCheck(id){
-  CHECKLIST=CHECKLIST.map(function(i){return i.id===id?Object.assign({},i,{checked:!i.checked}):i;});
+  var list = checklistState[currentSymbol];
+  list.forEach(function(i){ if(i.id===id) i.checked = !i.checked; });
   renderChecklist();
 }
 
-var tickHtml=TICKER.map(function(t){
-  return '<span style="font-size:11.5px;color:#555;font-family:\'JetBrains Mono\',monospace;padding-right:48px;"><span style="color:#F0B429;margin-right:7px;">·</span>'+t+'</span>';
-}).join("");
-document.getElementById("ticker-content").innerHTML=tickHtml;
-document.getElementById("ticker-content-2").innerHTML=tickHtml;
+// ─── TAGS / SESSIONS / TICKER ───────────────────────────────────────────────
+function renderTags(){
+  $('analysis-tags').innerHTML = (TAGS[currentSymbol] || [])
+    .map(function(t){ return '<div class="tag">' + t + '</div>'; })
+    .join('');
+}
 
-var twIdx=0,twChar=0,twDel=false,twText="";
+function renderSessions(){
+  var now = new Date();
+  var nyStr = now.toLocaleString('en-US', { timeZone:'America/New_York', hour12:false, hour:'2-digit', minute:'2-digit' });
+  var parts = nyStr.split(':');
+  var nyH = parseInt(parts[0], 10) + parseInt(parts[1], 10)/60;
+
+  var sessions = [
+    { name:'Tokyo',    open: nyH >= 19 || nyH < 4 },
+    { name:'London',   open: nyH >= 3  && nyH < 12 },
+    { name:'New York', open: nyH >= 9.5 && nyH < 16 }
+  ];
+  $('sessions-list').innerHTML = sessions.map(function(s){
+    var dot = s.open
+      ? '<div class="breathe" style="width:7px;height:7px;border-radius:50%;background:#639922;flex-shrink:0;"></div>'
+      : '<div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.1);flex-shrink:0;"></div>';
+    var name = s.open
+      ? '<span style="font-size:13px;color:#D8D8D8;font-weight:500;">' + s.name + '</span>'
+      : '<span style="font-size:13px;color:#444;">' + s.name + '</span>';
+    var status = s.open
+      ? '<span class="mono" style="font-size:11px;color:#639922;">OPEN</span>'
+      : '<span class="mono" style="font-size:11px;color:#2A2A2A;">CLOSED</span>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;">'
+      + '<div style="display:flex;align-items:center;gap:9px;">' + dot + name + '</div>'
+      + status + '</div>';
+  }).join('');
+}
+
+function renderTicker(){
+  var html = TICKER_ITEMS.map(function(t){
+    return '<span style="font-size:11.5px;color:#555;font-family:\'JetBrains Mono\',monospace;padding-right:48px;"><span style="color:#F0B429;margin-right:7px;">·</span>' + t + '</span>';
+  }).join('');
+  $('ticker-content').innerHTML  = html;
+  $('ticker-content-2').innerHTML = html;
+}
+
+// ─── TYPEWRITER ──────────────────────────────────────────────────────────────
+var twIdx=0, twChar=0, twDel=false, twText='', twSym='GC1!';
 function tickTW(){
-  var p=PROMPTS[twIdx],speed=twDel?20:50;
-  if(!twDel&&twChar<p.length){twChar++;twText=p.slice(0,twChar);}
-  else if(!twDel&&twChar===p.length){setTimeout(function(){twDel=true;},2200);}
-  else if(twDel&&twChar>0){twChar--;twText=p.slice(0,twChar);}
-  else{twDel=false;twIdx=(twIdx+1)%PROMPTS.length;}
-  var el=document.getElementById("typewriter-el");if(el)el.textContent=twText;
-  setTimeout(tickTW,speed);
+  var prompts = PROMPTS[currentSymbol] || [];
+  if(twSym !== currentSymbol){ twIdx=0; twChar=0; twDel=false; twText=''; twSym=currentSymbol; }
+  if(!prompts.length){ setTimeout(tickTW, 400); return; }
+  var p = prompts[twIdx % prompts.length];
+  var speed = twDel ? 20 : 50;
+  if(!twDel && twChar < p.length){ twChar++; twText = p.slice(0,twChar); }
+  else if(!twDel && twChar === p.length){ setTimeout(function(){ twDel=true; }, 2200); }
+  else if(twDel && twChar > 0){ twChar--; twText = p.slice(0,twChar); }
+  else { twDel=false; twIdx = (twIdx+1) % prompts.length; }
+  var el = $('typewriter-el'); if(el) el.textContent = twText;
+  setTimeout(tickTW, speed);
 }
 
-function updatePrice(){
-  var d=(Math.random()-.472)*1.4;
-  price=Math.max(3100,price+d);
-  priceDelta=parseFloat((priceDelta+d*0.04).toFixed(2));
-  priceHist.push(price);if(priceHist.length>80)priceHist.shift();
-  var pel=document.getElementById("price-el");
-  if(pel)pel.textContent="$"+price.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-  var de=document.getElementById("delta-el"),dt=document.getElementById("delta-text"),da=document.getElementById("delta-arrow");
-  var up=priceDelta>=0;
-  if(de)de.style.color=up?"#639922":"#EF4444";
-  if(dt)dt.textContent=(up?"+":"")+priceDelta.toFixed(2)+"%";
-  if(da)da.innerHTML=up
-    ?'<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/>'
-    :'<line x1="7" y1="7" x2="17" y2="17"/><polyline points="17,7 17,17 7,17"/>';
-  drawSpark();
+// ─── INIT ────────────────────────────────────────────────────────────────────
+function init(){
+  renderTicker();
+  renderTags();
+  renderChecklist();
+  renderSessions();
+  setInterval(renderSessions, 60000);
+  setTimeout(tickTW, 500);
+  window.addEventListener('resize', drawChart);
+  initData();
 }
 
-drawSpark();
-renderChecklist();
-setTimeout(tickTW, 500);
-setInterval(updatePrice, 1400);
-window.addEventListener("resize", drawSpark);
+init();
 </script>
 </body>
 </html>
