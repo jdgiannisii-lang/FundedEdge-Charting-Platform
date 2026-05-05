@@ -232,7 +232,15 @@
 
 <script>
 // ─── BACKEND ─────────────────────────────────────────────────────────────────
-var BACKEND = 'https://verc-jd-s-projects2.vercel.app/api/stock';
+// When running on Vercel (same deployment), use relative path.
+// When running on GitHub Pages, point to the Vercel deployment.
+var BACKEND = (function(){
+  var h = window.location.hostname;
+  if (h === 'localhost' || h === '127.0.0.1' || h.endsWith('.vercel.app')) {
+    return '/api/stock';
+  }
+  return 'https://jdgiannisii-lang-github-io.vercel.app/api/stock';
+}());
 
 // ─── SYMBOL / UI CONFIG ──────────────────────────────────────────────────────
 var SYMBOLS = {
