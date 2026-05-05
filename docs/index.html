@@ -398,7 +398,7 @@ function initData(){
     console.error('[Terminal] fetchQuote error:', err);
     setConn('error', 'API ERR');
     dataMode = 'demo';
-    setTimeout(function(){ setConn('loading', 'DEMO MODE'); startDemo(); }, 1000);
+    setTimeout(function(){ setConn('', 'DEMO MODE'); startDemo(); }, 1000);
   });
 }
 
@@ -554,7 +554,7 @@ function renderChecklist(){
   if(cnt>=5){ bg.style.background='rgba(99,153,34,0.18)'; bg.style.color='#639922'; bg.textContent='VALID'; }
   else       { bg.style.background='rgba(239,68,68,0.15)'; bg.style.color='#EF4444'; bg.textContent='WAIT'; }
   el.innerHTML=list.map(function(item){
-    return '<div class="check-row" onclick="toggleCheck('+item.id+')">'
+    return '<div class="check-row" onclick="toggleCheck('+item.id+')">'  
       +'<div class="check-box'+(item.checked?' on':'')+'">'+
        (item.checked?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="#639922" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':'')
       +'</div>'
