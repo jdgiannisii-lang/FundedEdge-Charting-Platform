@@ -193,7 +193,12 @@
   <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px;">
     <div style="flex:1;min-width:240px;">
       <div class="label" style="margin-bottom:6px;">API Key</div>
-      <input id="input-key" class="settings-input" type="password" placeholder="paste your Finnhub key" autocomplete="off" spellcheck="false">
+      <div style="position:relative;">
+        <input id="input-key" class="settings-input" type="text" placeholder="paste your Finnhub key" autocomplete="off" spellcheck="false" style="padding-right:38px;">
+        <button onclick="toggleKeyVisibility()" id="eye-btn" title="Show/hide key" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#555;padding:2px;display:flex;align-items:center;">
+          <svg id="eye-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
     </div>
     <button class="btn-primary" onclick="saveApiKey()">Save &amp; Connect</button>
     <button class="btn-ghost" onclick="clearApiKey()">Clear</button>
@@ -425,19 +430,25 @@ function toggleSettings(){
   var p = $('settings-panel');
   p.classList.toggle('open');
   if(p.classList.contains('open')){
-    $('input-key').value = apiKey ? '••••••••' + apiKey.slice(-4) : '';
+    $('input-key').type = 'password';
+    $('input-key').value = apiKey || '';
+    setApiStatus('', '');
     $('input-key').focus();
-    $('input-key').select();
   }
+}
+
+function toggleKeyVisibility(){
+  var inp = $('input-key');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 
 function saveApiKey(){
   var v = $('input-key').value.trim();
-  if(v && !v.startsWith('••')){
+  if(v){
     apiKey = v;
     localStorage.setItem('finnhub_key', apiKey);
-    setApiStatus('Connecting…', '#F0B429');
   }
+  setApiStatus('Connecting…', '#F0B429');
   initData();
 }
 
@@ -552,54 +563,57 @@ function initData(){
   setConn('loading', 'LOADING');
 
   var sym = SYMBOLS[currentSymbol];
-  Promise.all([
-    fetchQuote(sym.fh),
-    fetchCandles(sym.fh, currentChart)
-  ]).then(function(results){
-    var q = results[0];
-    var c = results[1];
-    if(!q || typeof q.c !== 'number'){
-      throw new Error('bad response');
-    }
-    // use previous close if current price is 0 (market closed)
+
+  // Quote is free tier — connect on this alone
+  fetchQuote(sym.fh).then(function(q){
+    if(!q || typeof q.c !== 'number') throw new Error('bad response');
+
     latestPrice = q.c || q.pc || 0;
-    openPrice   = q.o || q.pc || latestPrice;
+    openPrice   = q.o  || q.pc || latestPrice;
     prevClose   = q.pc;
-    dayHigh     = q.h || q.c;
-    dayLow      = q.l || q.c;
-    bars        = c;
-    lineHist    = c.length ? c.map(function(b){return b.c;}) : [latestPrice];
-    if(lineHist[lineHist.length-1] !== latestPrice) lineHist.push(latestPrice);
+    dayHigh     = q.h  || latestPrice;
+    dayLow      = q.l  || latestPrice;
+    bars        = [];
+    lineHist    = latestPrice ? [latestPrice] : [];
 
     updatePriceDisplay();
     drawChart();
     setConn('live', 'LIVE');
-    setApiStatus('Connected · live data flowing', '#639922');
+    setApiStatus('Connected · streaming live ticks', '#639922');
     setTimeout(function(){
       $('settings-panel').classList.remove('open');
       setApiStatus('', '');
-    }, 1200);
+    }, 1400);
     connectWS(sym.fh);
     refreshTimer = setInterval(refreshData, REFRESH_MS[currentChart] || 30000);
+
+    // Candles are premium — try but don't block on failure
+    fetchCandles(sym.fh, currentChart).then(function(c){
+      if(c.length){
+        bars     = c;
+        lineHist = c.map(function(b){ return b.c; });
+        if(latestPrice && lineHist[lineHist.length-1] !== latestPrice) lineHist.push(latestPrice);
+        drawChart();
+      }
+    }).catch(function(){
+      // Free plan — just rely on live ticks for the line chart
+      $('levels-el').textContent =
+        'O ' + fmt(openPrice) + ' · H ' + fmt(dayHigh) + ' · L ' + fmt(dayLow)
+        + ' · candle history requires Finnhub premium';
+    });
+
   }).catch(function(err){
-    var msg = (err && err.message) || 'unknown error';
-    console.error('[Terminal] initData error:', msg, err);
-    var label = 'API ERR';
-    var detail;
+    var msg = (err && err.message) || 'unknown';
+    console.error('[Terminal] fetchQuote error:', msg, err);
+    var label, detail;
     if(msg.indexOf('401') >= 0 || msg.toLowerCase().indexOf('api key') >= 0){
-      label = 'BAD KEY';
-      detail = 'Invalid API key — check it at finnhub.io/dashboard';
-    } else if(msg.indexOf('403') >= 0){
-      label = 'NO ACCESS';
-      detail = 'Key valid but symbol not in your plan';
+      label = 'BAD KEY'; detail = 'Invalid API key — check finnhub.io/dashboard';
     } else if(msg.indexOf('429') >= 0){
-      label = 'RATE LIMIT';
-      detail = 'Too many requests — wait a minute';
+      label = 'RATE LIMIT'; detail = 'Too many requests — wait a minute and retry';
     } else if(msg.toLowerCase().indexOf('failed to fetch') >= 0){
-      label = 'NETWORK';
-      detail = 'Network/CORS error — check connection';
+      label = 'NETWORK'; detail = 'Network error — is the key correct and finnhub.io reachable?';
     } else {
-      detail = 'Error: ' + msg;
+      label = 'API ERR'; detail = 'Error: ' + msg;
     }
     setConn('error', label);
     setApiStatus(detail, '#EF4444');
@@ -730,12 +744,18 @@ function updatePriceDisplay(){
 }
 
 // ─── CHART RENDERING ────────────────────────────────────────────────────────
+function noDataMsg(label){
+  var svg = $('chart-svg');
+  if(!svg) return;
+  svg.innerHTML = '<text x="200" y="54" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#333">' + (label||'Waiting for live ticks…') + '</text>';
+}
+
 function drawLine(){
   var svg = $('chart-svg');
   if(!svg) return;
   var W=400, H=100;
   var d = lineHist.slice(-120);
-  if(d.length < 2){ svg.innerHTML = ''; return; }
+  if(d.length < 2){ noDataMsg('Waiting for live ticks…'); return; }
   var mn = Math.min.apply(null,d) - 0.001;
   var mx = Math.max.apply(null,d) + 0.001;
   var rng = mx - mn || 1;
@@ -758,7 +778,7 @@ function drawCandles(){
   if(!svg) return;
   var W=400, H=100, PAD=4;
   var d = bars.slice(-60);
-  if(!d.length){ svg.innerHTML = ''; return; }
+  if(!d.length){ noDataMsg('Candle history requires Finnhub premium'); return; }
   var n = d.length;
   var slot = (W - PAD*2) / n;
   var cw   = Math.max(2, slot - 1.4);
