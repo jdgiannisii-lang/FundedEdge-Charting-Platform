@@ -202,8 +202,9 @@
     Free tier · 60 req/min · ETF proxies: GC1!→GLD · NQ→QQQ · ES→SPY · Get a key at finnhub.io
   </div>
   <div style="margin-top:10px;padding:8px 12px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.12);">
-    <span style="font-size:10.5px;color:#A55757;font-family:'JetBrains Mono',monospace;">Stored in browser localStorage. Anyone with access to this site source can read it — use a data-only key.</span>
+    <span style="font-size:10.5px;color:#A55757;font-family:'JetBrains Mono',monospace;">Stored in browser localStorage — use a data-only key, not your live trading key.</span>
   </div>
+  <div id="api-status" style="margin-top:8px;font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;display:none;"></div>
 </div>
 
 <!-- MAIN GRID -->
@@ -435,8 +436,8 @@ function saveApiKey(){
   if(v && !v.startsWith('••')){
     apiKey = v;
     localStorage.setItem('finnhub_key', apiKey);
+    setApiStatus('Connecting…', '#F0B429');
   }
-  $('settings-panel').classList.remove('open');
   initData();
 }
 
@@ -448,6 +449,15 @@ function clearApiKey(){
   initData();
 }
 
+function setApiStatus(msg, color){
+  var el = $('api-status');
+  if(!el) return;
+  if(!msg){ el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.style.color = color || '#555';
+  el.textContent = msg;
+}
+
 function setConn(state, label){
   $('conn-dot').className = 'conn-dot ' + (state || '');
   $('conn-label').textContent = label;
@@ -457,8 +467,12 @@ function setConn(state, label){
 function fetchQuote(fhSymbol){
   var url = FINNHUB_REST + '/quote?symbol=' + encodeURIComponent(fhSymbol) + '&token=' + apiKey;
   return fetch(url).then(function(r){
-    if(!r.ok) throw new Error('quote ' + r.status);
+    if(r.status === 401 || r.status === 403) throw new Error('401');
+    if(!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
+  }).then(function(d){
+    if(d && d.error) throw new Error(d.error);
+    return d;
   });
 }
 
@@ -544,11 +558,12 @@ function initData(){
   ]).then(function(results){
     var q = results[0];
     var c = results[1];
-    if(!q || typeof q.c !== 'number' || q.c === 0){
-      throw new Error('empty quote');
+    if(!q || typeof q.c !== 'number'){
+      throw new Error('bad response');
     }
-    latestPrice = q.c;
-    openPrice   = q.o || q.pc || q.c;
+    // use previous close if current price is 0 (market closed)
+    latestPrice = q.c || q.pc || 0;
+    openPrice   = q.o || q.pc || latestPrice;
     prevClose   = q.pc;
     dayHigh     = q.h || q.c;
     dayLow      = q.l || q.c;
@@ -559,16 +574,38 @@ function initData(){
     updatePriceDisplay();
     drawChart();
     setConn('live', 'LIVE');
+    setApiStatus('Connected · live data flowing', '#639922');
+    setTimeout(function(){
+      $('settings-panel').classList.remove('open');
+      setApiStatus('', '');
+    }, 1200);
     connectWS(sym.fh);
     refreshTimer = setInterval(refreshData, REFRESH_MS[currentChart] || 30000);
   }).catch(function(err){
-    var msg = (err && err.message) || '';
-    setConn('error', msg.indexOf('401') >= 0 ? 'BAD KEY' : 'API ERR');
+    var msg = (err && err.message) || 'unknown error';
+    console.error('[Terminal] initData error:', msg, err);
+    var label = 'API ERR';
+    var detail;
+    if(msg.indexOf('401') >= 0 || msg.toLowerCase().indexOf('api key') >= 0){
+      label = 'BAD KEY';
+      detail = 'Invalid API key — check it at finnhub.io/dashboard';
+    } else if(msg.indexOf('403') >= 0){
+      label = 'NO ACCESS';
+      detail = 'Key valid but symbol not in your plan';
+    } else if(msg.indexOf('429') >= 0){
+      label = 'RATE LIMIT';
+      detail = 'Too many requests — wait a minute';
+    } else if(msg.toLowerCase().indexOf('failed to fetch') >= 0){
+      label = 'NETWORK';
+      detail = 'Network/CORS error — check connection';
+    } else {
+      detail = 'Error: ' + msg;
+    }
+    setConn('error', label);
+    setApiStatus(detail, '#EF4444');
+    $('settings-panel').classList.add('open');
     dataMode = 'demo';
-    setTimeout(function(){
-      setConn('demo', 'DEMO MODE');
-      startDemo();
-    }, 1500);
+    setTimeout(function(){ setConn('demo', 'DEMO MODE'); startDemo(); }, 2000);
   });
 }
 
