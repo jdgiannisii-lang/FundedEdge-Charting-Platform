@@ -39,8 +39,7 @@
   @keyframes cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
   @keyframes bar-in { from{transform:scaleX(0)} to{transform:scaleX(1)} }
   @keyframes shimmer-move { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
-  @keyframes fade-in { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
-  .breathe    { animation: breathe 2s ease-in-out infinite; }
+  .breathe     { animation: breathe 2s ease-in-out infinite; }
   .float-badge { animation: float 3s ease-in-out infinite; }
   .ticker-inner { display:flex; white-space:nowrap; animation: scroll-left 38s linear infinite; }
   .ticker-inner:hover { animation-play-state: paused; }
@@ -76,51 +75,13 @@
   .chart-tab:hover { border-color: #BA7517; color: #BA7517; }
   .chart-tab.active { background: rgba(240,180,41,0.10); border-color: rgba(240,180,41,0.3); color: #F0B429; }
 
-  /* Settings */
-  .icon-btn {
-    width: 28px; height: 28px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.08); background: transparent;
-    color: #555; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .15s; flex-shrink: 0;
-  }
-  .icon-btn:hover { border-color: rgba(255,255,255,0.2); color: #999; }
-  .settings-panel { display: none; animation: fade-in .2s ease; }
-  .settings-panel.open { display: block; }
-  .settings-input {
-    width: 100%; padding: 9px 12px; border-radius: 8px;
-    background: rgba(0,0,0,0.4); color: #D0D0D0;
-    border: 1px solid rgba(255,255,255,0.08);
-    font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    outline: none; transition: border-color .15s;
-  }
-  .settings-input:focus { border-color: rgba(240,180,41,0.3); }
-  .btn-primary {
-    padding: 7px 18px; border-radius: 8px;
-    border: 1px solid rgba(240,180,41,0.3);
-    background: rgba(240,180,41,0.1); color: #F0B429;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px; font-weight: 600; cursor: pointer;
-    transition: all .15s;
-  }
-  .btn-primary:hover { background: rgba(240,180,41,0.2); }
-  .btn-ghost {
-    padding: 7px 14px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: transparent; color: #888;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px; cursor: pointer; transition: all .15s;
-  }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: #D0D0D0; }
-
   .conn-dot {
     width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
     background: #333; transition: background .3s;
   }
-  .conn-dot.live      { background: #639922; animation: breathe 2s ease-in-out infinite; }
-  .conn-dot.loading   { background: #F0B429; animation: breathe 1s ease-in-out infinite; }
-  .conn-dot.error     { background: #EF4444; }
-  .conn-dot.demo      { background: #BA7517; }
+  .conn-dot.live    { background: #639922; animation: breathe 2s ease-in-out infinite; }
+  .conn-dot.loading { background: #F0B429; animation: breathe 1s ease-in-out infinite; }
+  .conn-dot.error   { background: #EF4444; }
 
   /* Checklist */
   .check-row {
@@ -165,7 +126,7 @@
     <div id="symbol-icon" style="width:30px;height:30px;border-radius:8px;background:#2A1F07;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#F0B429;font-family:'JetBrains Mono',monospace;flex-shrink:0;">Au</div>
     <div>
       <div style="font-size:14px;font-weight:600;letter-spacing:-.02em;line-height:1.2;">Futures Terminal</div>
-      <div style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;">ICT / SMC · Finnhub feed</div>
+      <div style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;">ICT / SMC</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -174,42 +135,11 @@
       <button class="sym-tab" data-sym="NQ" onclick="switchSymbol('NQ')">NQ</button>
       <button class="sym-tab" data-sym="ES" onclick="switchSymbol('ES')">ES</button>
     </div>
-    <button class="icon-btn" onclick="toggleSettings()" title="API settings" aria-label="Settings">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-      </svg>
-    </button>
     <div style="display:flex;align-items:center;gap:6px;">
-      <div id="conn-dot" class="conn-dot demo"></div>
-      <span id="conn-label" style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;letter-spacing:.05em;">DEMO MODE</span>
+      <div id="conn-dot" class="conn-dot loading"></div>
+      <span id="conn-label" style="font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;letter-spacing:.05em;">LOADING</span>
     </div>
   </div>
-</div>
-
-<!-- SETTINGS PANEL -->
-<div id="settings-panel" class="settings-panel card">
-  <div style="font-size:11.5px;font-weight:600;letter-spacing:.06em;color:#888;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:14px;">Finnhub API key</div>
-  <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px;">
-    <div style="flex:1;min-width:240px;">
-      <div class="label" style="margin-bottom:6px;">API Key</div>
-      <div style="position:relative;">
-        <input id="input-key" class="settings-input" type="text" placeholder="paste your Finnhub key" autocomplete="off" spellcheck="false" style="padding-right:38px;">
-        <button onclick="toggleKeyVisibility()" id="eye-btn" title="Show/hide key" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#555;padding:2px;display:flex;align-items:center;">
-          <svg id="eye-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
-      </div>
-    </div>
-    <button class="btn-primary" onclick="saveApiKey()">Save &amp; Connect</button>
-    <button class="btn-ghost" onclick="clearApiKey()">Clear</button>
-  </div>
-  <div style="font-size:11px;color:#444;font-family:'JetBrains Mono',monospace;line-height:1.5;">
-    Free tier · 60 req/min · ETF proxies: GC1!→GLD · NQ→QQQ · ES→SPY · Get a key at finnhub.io
-  </div>
-  <div style="margin-top:10px;padding:8px 12px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.12);">
-    <span style="font-size:10.5px;color:#A55757;font-family:'JetBrains Mono',monospace;">Stored in browser localStorage — use a data-only key, not your live trading key.</span>
-  </div>
-  <div id="api-status" style="margin-top:8px;font-size:11px;color:#555;font-family:'JetBrains Mono',monospace;display:none;"></div>
 </div>
 
 <!-- MAIN GRID -->
@@ -301,26 +231,14 @@
 </div>
 
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
-var FINNHUB_REST = 'https://finnhub.io/api/v1';
-var FINNHUB_WS   = 'wss://ws.finnhub.io';
+// ─── BACKEND ─────────────────────────────────────────────────────────────────
+var BACKEND = 'https://verc-jd-s-projects2.vercel.app/api/stock';
 
+// ─── SYMBOL / UI CONFIG ──────────────────────────────────────────────────────
 var SYMBOLS = {
-  'GC1!': {
-    fh: 'GLD', icon: 'Au', iconBg: '#2A1F07', iconColor: '#F0B429',
-    label: 'Gold (GC1!) — via GLD ETF proxy',
-    demoStart: 295.40, demoVol: 0.45
-  },
-  'NQ': {
-    fh: 'QQQ', icon: 'NQ', iconBg: '#0A1A2A', iconColor: '#4DA3FF',
-    label: 'Nasdaq 100 (NQ) — via QQQ ETF proxy',
-    demoStart: 478.20, demoVol: 0.85
-  },
-  'ES': {
-    fh: 'SPY', icon: 'ES', iconBg: '#0A2A1A', iconColor: '#4DDB8A',
-    label: 'S&P 500 (ES) — via SPY ETF proxy',
-    demoStart: 530.10, demoVol: 0.55
-  }
+  'GC1!': { fh:'GLD', icon:'Au', iconBg:'#2A1F07', iconColor:'#F0B429', label:'Gold (GC1!) — via GLD ETF proxy',      demoStart:295.40, demoVol:0.45 },
+  'NQ':   { fh:'QQQ', icon:'NQ', iconBg:'#0A1A2A', iconColor:'#4DA3FF', label:'Nasdaq 100 (NQ) — via QQQ ETF proxy',  demoStart:478.20, demoVol:0.85 },
+  'ES':   { fh:'SPY', icon:'ES', iconBg:'#0A2A1A', iconColor:'#4DDB8A', label:'S&P 500 (ES) — via SPY ETF proxy',     demoStart:530.10, demoVol:0.55 },
 };
 
 var CHECKLISTS = {
@@ -330,7 +248,7 @@ var CHECKLISTS = {
     {id:3, label:'SMT w/ MES',                checked:false},
     {id:4, label:'HTF PD-Array alignment',    checked:false},
     {id:5, label:'Premium / discount zone',   checked:false},
-    {id:6, label:'Adequate risk (R:R > 3)',   checked:false}
+    {id:6, label:'Adequate risk (R:R > 3)',   checked:false},
   ],
   'NQ': [
     {id:1, label:'IFVG identified',           checked:false},
@@ -338,7 +256,7 @@ var CHECKLISTS = {
     {id:3, label:'SMT w/ ES',                 checked:false},
     {id:4, label:'HTF PD-Array alignment',    checked:false},
     {id:5, label:'Premium / discount zone',   checked:false},
-    {id:6, label:'Adequate risk (R:R > 3)',   checked:false}
+    {id:6, label:'Adequate risk (R:R > 3)',   checked:false},
   ],
   'ES': [
     {id:1, label:'IFVG identified',           checked:false},
@@ -346,8 +264,8 @@ var CHECKLISTS = {
     {id:3, label:'SMT w/ NQ',                 checked:false},
     {id:4, label:'HTF PD-Array alignment',    checked:false},
     {id:5, label:'Premium / discount zone',   checked:false},
-    {id:6, label:'Adequate risk (R:R > 3)',   checked:false}
-  ]
+    {id:6, label:'Adequate risk (R:R > 3)',   checked:false},
+  ],
 };
 
 var PROMPTS = {
@@ -357,7 +275,7 @@ var PROMPTS = {
     '4H FVG fill complete. OTE at 61.8% in play.',
     'SMT divergence w/ MES flagged — bullish.',
     'HTF PD-Array: monthly breaker active. Bias UP.',
-    'Liquidity sweep absorbed below swing low.'
+    'Liquidity sweep absorbed below swing low.',
   ],
   'NQ': [
     'Scanning sell-side liquidity below daily lows…',
@@ -365,7 +283,7 @@ var PROMPTS = {
     '4H FVG detected — monitoring for displacement.',
     'SMT divergence w/ ES confirmed — watch reversal.',
     'NWOG gap in play. Targeting equilibrium.',
-    'Premium array reached — expect retracement.'
+    'Premium array reached — expect retracement.',
   ],
   'ES': [
     'Scanning liquidity pools above session high…',
@@ -373,14 +291,14 @@ var PROMPTS = {
     'SMT w/ NQ diverging — directional bias loading.',
     'Institutional order flow: net long bias active.',
     'HTF breaker block tested — watching reaction.',
-    'Discount array identified — expecting bid.'
-  ]
+    'Discount array identified — expecting bid.',
+  ],
 };
 
 var TAGS = {
   'GC1!': ['4H bias','FVG scan','OTE level','liquidity','iFVG'],
   'NQ':   ['4H bias','FVG scan','NWOG gap','buyside','iFVG'],
-  'ES':   ['4H bias','FVG scan','breaker','liquidity','iFVG']
+  'ES':   ['4H bias','FVG scan','breaker','liquidity','iFVG'],
 };
 
 var TICKER_ITEMS = [
@@ -393,28 +311,24 @@ var TICKER_ITEMS = [
   'SPY: liquidity above daily highs · bias up',
   '10Y yield steady — risk on',
   'CFTC CoT: spec longs increasing on metals',
-  'VIX compressed · structure leans risk-on'
+  'VIX compressed · structure leans risk-on',
 ];
 
-var RES_MAP      = { 'line':'5', '1m':'1', '5m':'5', '15m':'15' };
-var LOOKBACK_HRS = { 'line':10,  '1m':3,   '5m':12,  '15m':36   };
-var REFRESH_MS   = { 'line':30000,'1m':30000,'5m':60000,'15m':120000 };
+var POLL_MS = 5000;
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
-var apiKey         = localStorage.getItem('finnhub_key') || '';
 var currentSymbol  = 'GC1!';
 var currentChart   = 'line';
-var ws             = null;
-var bars           = [];
 var lineHist       = [];
+var bars           = [];
 var latestPrice    = 0;
 var openPrice      = 0;
 var prevClose      = 0;
 var dayHigh        = 0;
 var dayLow         = 0;
-var dataMode       = 'demo';
+var dataMode       = 'live';
+var pollTimer      = null;
 var demoTimer      = null;
-var refreshTimer   = null;
 var checklistState = {};
 
 Object.keys(CHECKLISTS).forEach(function(s){
@@ -425,538 +339,290 @@ Object.keys(CHECKLISTS).forEach(function(s){
 function $(id){ return document.getElementById(id); }
 function fmt(n){ return '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
-// ─── SETTINGS ────────────────────────────────────────────────────────────────
-function toggleSettings(){
-  var p = $('settings-panel');
-  p.classList.toggle('open');
-  if(p.classList.contains('open')){
-    $('input-key').type = 'password';
-    $('input-key').value = apiKey || '';
-    setApiStatus('', '');
-    $('input-key').focus();
-  }
-}
-
-function toggleKeyVisibility(){
-  var inp = $('input-key');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-}
-
-function saveApiKey(){
-  var v = $('input-key').value.trim();
-  if(v){
-    apiKey = v;
-    localStorage.setItem('finnhub_key', apiKey);
-  }
-  setApiStatus('Connecting…', '#F0B429');
-  initData();
-}
-
-function clearApiKey(){
-  apiKey = '';
-  localStorage.removeItem('finnhub_key');
-  $('input-key').value = '';
-  $('settings-panel').classList.remove('open');
-  initData();
-}
-
-function setApiStatus(msg, color){
-  var el = $('api-status');
-  if(!el) return;
-  if(!msg){ el.style.display = 'none'; return; }
-  el.style.display = 'block';
-  el.style.color = color || '#555';
-  el.textContent = msg;
-}
-
 function setConn(state, label){
   $('conn-dot').className = 'conn-dot ' + (state || '');
   $('conn-label').textContent = label;
 }
 
-// ─── FINNHUB FETCH ───────────────────────────────────────────────────────────
-function fetchQuote(fhSymbol){
-  var url = FINNHUB_REST + '/quote?symbol=' + encodeURIComponent(fhSymbol) + '&token=' + apiKey;
-  return fetch(url).then(function(r){
-    if(r.status === 401 || r.status === 403) throw new Error('401');
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  }).then(function(d){
-    if(d && d.error) throw new Error(d.error);
-    return d;
-  });
-}
-
-function fetchCandles(fhSymbol, chartType){
-  var res  = RES_MAP[chartType] || '5';
-  var hrs  = LOOKBACK_HRS[chartType] || 10;
-  var to   = Math.floor(Date.now()/1000);
-  var from = to - hrs * 3600;
-  var url  = FINNHUB_REST + '/stock/candle'
-    + '?symbol=' + encodeURIComponent(fhSymbol)
-    + '&resolution=' + res
-    + '&from=' + from
-    + '&to=' + to
-    + '&token=' + apiKey;
-  return fetch(url).then(function(r){
-    if(!r.ok) throw new Error('candle ' + r.status);
-    return r.json();
-  }).then(function(d){
-    if(d.s !== 'ok' || !d.t || !d.t.length) return [];
-    return d.t.map(function(t,i){
-      return { t:t, o:d.o[i], h:d.h[i], l:d.l[i], c:d.c[i], v:d.v[i] };
+// ─── DATA LAYER ──────────────────────────────────────────────────────────────
+function fetchQuote(symbol){
+  return fetch(BACKEND + '?symbol=' + encodeURIComponent(symbol))
+    .then(function(r){
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
     });
-  });
-}
-
-// ─── WEBSOCKET ───────────────────────────────────────────────────────────────
-function disconnectWS(){
-  if(ws){ try { ws.close(); } catch(_) {} ws = null; }
-}
-
-function connectWS(fhSymbol){
-  disconnectWS();
-  ws = new WebSocket(FINNHUB_WS + '?token=' + encodeURIComponent(apiKey));
-  ws.onopen = function(){
-    ws.send(JSON.stringify({ type:'subscribe', symbol: fhSymbol }));
-  };
-  ws.onmessage = function(e){
-    var msg;
-    try { msg = JSON.parse(e.data); } catch(_) { return; }
-    if(msg.type === 'trade' && msg.data && msg.data.length){
-      var last = msg.data[msg.data.length - 1];
-      latestPrice = last.p;
-      if(latestPrice > dayHigh) dayHigh = latestPrice;
-      if(!dayLow || latestPrice < dayLow) dayLow = latestPrice;
-      lineHist.push(latestPrice);
-      if(lineHist.length > 200) lineHist.shift();
-      updatePriceDisplay();
-      if(currentChart === 'line') drawChart();
-    }
-    if(msg.type === 'error'){
-      setConn('error', 'WS ERR');
-    }
-  };
-  ws.onerror = function(){ setConn('error', 'WS ERR'); };
-  ws.onclose = function(){
-    if(dataMode === 'live') setConn('loading', 'RECONNECT');
-  };
 }
 
 // ─── DATA INIT ───────────────────────────────────────────────────────────────
 function clearTimers(){
-  if(demoTimer)    { clearInterval(demoTimer);    demoTimer = null;    }
-  if(refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+  if(pollTimer)  { clearInterval(pollTimer);  pollTimer  = null; }
+  if(demoTimer)  { clearInterval(demoTimer);  demoTimer  = null; }
 }
 
 function initData(){
   clearTimers();
-  disconnectWS();
-
-  if(!apiKey){
-    dataMode = 'demo';
-    setConn('demo', 'DEMO MODE');
-    startDemo();
-    return;
-  }
   dataMode = 'live';
   setConn('loading', 'LOADING');
 
   var sym = SYMBOLS[currentSymbol];
 
-  // Quote is free tier — connect on this alone
-  fetchQuote(sym.fh).then(function(q){
-    if(!q || typeof q.c !== 'number') throw new Error('bad response');
+  fetchQuote(sym.fh).then(function(d){
+    latestPrice = d.c  || 0;
+    openPrice   = d.o  || d.pc || latestPrice;
+    prevClose   = d.pc || 0;
+    dayHigh     = d.h  || latestPrice;
+    dayLow      = d.l  || latestPrice;
 
-    latestPrice = q.c || q.pc || 0;
-    openPrice   = q.o  || q.pc || latestPrice;
-    prevClose   = q.pc;
-    dayHigh     = q.h  || latestPrice;
-    dayLow      = q.l  || latestPrice;
-    bars        = [];
-    lineHist    = latestPrice ? [latestPrice] : [];
+    if(lineHist.length === 0 && latestPrice) lineHist = [latestPrice];
+    else if(latestPrice){ lineHist.push(latestPrice); if(lineHist.length > 200) lineHist.shift(); }
 
     updatePriceDisplay();
     drawChart();
     setConn('live', 'LIVE');
-    setApiStatus('Connected · streaming live ticks', '#639922');
-    setTimeout(function(){
-      $('settings-panel').classList.remove('open');
-      setApiStatus('', '');
-    }, 1400);
-    connectWS(sym.fh);
-    refreshTimer = setInterval(refreshData, REFRESH_MS[currentChart] || 30000);
 
-    // Candles are premium — try but don't block on failure
-    fetchCandles(sym.fh, currentChart).then(function(c){
-      if(c.length){
-        bars     = c;
-        lineHist = c.map(function(b){ return b.c; });
-        if(latestPrice && lineHist[lineHist.length-1] !== latestPrice) lineHist.push(latestPrice);
+    pollTimer = setInterval(function(){
+      fetchQuote(sym.fh).then(function(d){
+        latestPrice = d.c  || latestPrice;
+        openPrice   = d.o  || openPrice;
+        prevClose   = d.pc || prevClose;
+        dayHigh     = d.h  || dayHigh;
+        dayLow      = d.l  || dayLow;
+        lineHist.push(latestPrice);
+        if(lineHist.length > 200) lineHist.shift();
+        updatePriceDisplay();
         drawChart();
-      }
-    }).catch(function(){
-      // Free plan — just rely on live ticks for the line chart
-      $('levels-el').textContent =
-        'O ' + fmt(openPrice) + ' · H ' + fmt(dayHigh) + ' · L ' + fmt(dayLow)
-        + ' · candle history requires Finnhub premium';
-    });
+      }).catch(function(){ setConn('error', 'POLL ERR'); });
+    }, POLL_MS);
 
   }).catch(function(err){
-    var msg = (err && err.message) || 'unknown';
-    console.error('[Terminal] fetchQuote error:', msg, err);
-    var label, detail;
-    if(msg.indexOf('401') >= 0 || msg.toLowerCase().indexOf('api key') >= 0){
-      label = 'BAD KEY'; detail = 'Invalid API key — check finnhub.io/dashboard';
-    } else if(msg.indexOf('429') >= 0){
-      label = 'RATE LIMIT'; detail = 'Too many requests — wait a minute and retry';
-    } else if(msg.toLowerCase().indexOf('failed to fetch') >= 0){
-      label = 'NETWORK'; detail = 'Network error — is the key correct and finnhub.io reachable?';
-    } else {
-      label = 'API ERR'; detail = 'Error: ' + msg;
-    }
-    setConn('error', label);
-    setApiStatus(detail, '#EF4444');
-    $('settings-panel').classList.add('open');
+    console.error('[Terminal] fetchQuote error:', err);
+    setConn('error', 'API ERR');
     dataMode = 'demo';
-    setTimeout(function(){ setConn('demo', 'DEMO MODE'); startDemo(); }, 2000);
+    setTimeout(function(){ setConn('loading', 'DEMO MODE'); startDemo(); }, 1000);
   });
-}
-
-function refreshData(){
-  if(dataMode !== 'live') return;
-  var sym = SYMBOLS[currentSymbol];
-  fetchQuote(sym.fh).then(function(q){
-    if(q && typeof q.c === 'number'){
-      if(q.h)  dayHigh  = Math.max(dayHigh, q.h);
-      if(q.l)  dayLow   = dayLow ? Math.min(dayLow, q.l) : q.l;
-      if(q.o)  openPrice = q.o;
-      if(q.pc) prevClose = q.pc;
-      if(!latestPrice) latestPrice = q.c;
-      updatePriceDisplay();
-    }
-  }).catch(function(){});
-  if(currentChart !== 'line'){
-    fetchCandles(sym.fh, currentChart).then(function(c){
-      if(c.length){ bars = c; drawChart(); }
-    }).catch(function(){});
-  }
 }
 
 // ─── DEMO MODE ───────────────────────────────────────────────────────────────
 function startDemo(){
+  setConn('', 'DEMO MODE');
   var sym = SYMBOLS[currentSymbol];
   var p   = sym.demoStart;
   var vol = sym.demoVol;
 
   lineHist = [];
   var px = p;
-  for(var i=0;i<80;i++){
-    px += (Math.random() - 0.49) * vol;
-    lineHist.push(px);
-  }
+  for(var i=0;i<80;i++){ px += (Math.random()-0.49)*vol; lineHist.push(px); }
 
   bars = [];
   var bp = p;
   for(var j=0;j<80;j++){
-    var o  = bp;
-    var hi = o + Math.random() * vol * 1.4;
-    var lo = o - Math.random() * vol * 1.4;
-    var cl = lo + Math.random() * (hi - lo);
-    bars.push({ t: Math.floor(Date.now()/1000) - (80-j)*60, o:o, h:hi, l:lo, c:cl, v:1000 });
-    bp = cl;
+    var o=bp, hi=o+Math.random()*vol*1.4, lo=o-Math.random()*vol*1.4, cl=lo+Math.random()*(hi-lo);
+    bars.push({t:Math.floor(Date.now()/1000)-(80-j)*60,o:o,h:hi,l:lo,c:cl,v:1000});
+    bp=cl;
   }
 
-  openPrice   = bars[0].o;
-  prevClose   = openPrice * (1 - (Math.random()*0.01 - 0.005));
-  latestPrice = lineHist[lineHist.length-1];
-  dayHigh     = Math.max.apply(null, bars.map(function(b){return b.h;}));
-  dayLow      = Math.min.apply(null, bars.map(function(b){return b.l;}));
+  openPrice=bars[0].o; prevClose=openPrice*(1-(Math.random()*0.01-0.005));
+  latestPrice=lineHist[lineHist.length-1];
+  dayHigh=Math.max.apply(null,bars.map(function(b){return b.h;}));
+  dayLow =Math.min.apply(null,bars.map(function(b){return b.l;}));
 
-  updatePriceDisplay();
-  drawChart();
+  updatePriceDisplay(); drawChart();
 
   demoTimer = setInterval(function(){
-    var d = (Math.random() - 0.49) * vol;
-    latestPrice = Math.max(latestPrice * 0.5, latestPrice + d);
-    if(latestPrice > dayHigh) dayHigh = latestPrice;
-    if(latestPrice < dayLow)  dayLow  = latestPrice;
-    lineHist.push(latestPrice);
-    if(lineHist.length > 120) lineHist.shift();
-
+    var d=(Math.random()-0.49)*vol;
+    latestPrice=Math.max(latestPrice*0.5,latestPrice+d);
+    if(latestPrice>dayHigh) dayHigh=latestPrice;
+    if(latestPrice<dayLow)  dayLow =latestPrice;
+    lineHist.push(latestPrice); if(lineHist.length>120) lineHist.shift();
     if(bars.length){
-      if(Math.random() < 0.15){
-        var lastC = bars[bars.length-1].c;
-        bars.push({
-          t: Math.floor(Date.now()/1000),
-          o: lastC, h: Math.max(lastC, latestPrice),
-          l: Math.min(lastC, latestPrice), c: latestPrice, v: 500
-        });
-        if(bars.length > 120) bars.shift();
-      } else {
-        var lb = bars[bars.length-1];
-        lb.c = latestPrice;
-        if(latestPrice > lb.h) lb.h = latestPrice;
-        if(latestPrice < lb.l) lb.l = latestPrice;
-      }
+      if(Math.random()<0.15){
+        var lc=bars[bars.length-1].c;
+        bars.push({t:Math.floor(Date.now()/1000),o:lc,h:Math.max(lc,latestPrice),l:Math.min(lc,latestPrice),c:latestPrice,v:500});
+        if(bars.length>120) bars.shift();
+      } else { var lb=bars[bars.length-1]; lb.c=latestPrice; if(latestPrice>lb.h) lb.h=latestPrice; if(latestPrice<lb.l) lb.l=latestPrice; }
     }
-    updatePriceDisplay();
-    drawChart();
+    updatePriceDisplay(); drawChart();
   }, 1400);
 }
 
-// ─── PRICE DISPLAY ──────────────────────────────────────────────────────────
+// ─── PRICE DISPLAY ───────────────────────────────────────────────────────────
 function updatePriceDisplay(){
   if(!latestPrice) return;
   $('price-el').textContent = fmt(latestPrice);
 
-  var base = openPrice || prevClose || latestPrice;
-  var deltaPct = base ? ((latestPrice - base) / base) * 100 : 0;
-  var up = deltaPct >= 0;
+  var base=openPrice||prevClose||latestPrice;
+  var pct=base?((latestPrice-base)/base)*100:0;
+  var up=pct>=0;
 
-  $('delta-el').style.color = up ? '#639922' : '#EF4444';
-  $('delta-text').textContent = (up?'+':'') + deltaPct.toFixed(2) + '%';
+  $('delta-el').style.color = up?'#639922':'#EF4444';
+  $('delta-text').textContent = (up?'+':'')+pct.toFixed(2)+'%';
   $('delta-arrow').innerHTML = up
-    ? '<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/>'
-    : '<line x1="7" y1="7" x2="17" y2="17"/><polyline points="17,7 17,17 7,17"/>';
+    ?'<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/>'
+    :'<line x1="7" y1="7" x2="17" y2="17"/><polyline points="17,7 17,17 7,17"/>';
 
-  var levels = 'O ' + fmt(openPrice) + ' · H ' + fmt(dayHigh) + ' · L ' + fmt(dayLow);
-  if(prevClose) levels += ' · PC ' + fmt(prevClose);
-  $('levels-el').textContent = levels;
+  var lvl='O '+fmt(openPrice)+' · H '+fmt(dayHigh)+' · L '+fmt(dayLow);
+  if(prevClose) lvl+=' · PC '+fmt(prevClose);
+  $('levels-el').textContent=lvl;
 
-  var b = $('bias-badge');
-  if(Math.abs(deltaPct) < 0.05){
-    b.style.background = 'rgba(80,80,80,0.15)';
-    b.style.borderColor = 'rgba(255,255,255,0.1)';
-    b.style.color = '#888';
-    b.textContent = 'NEUTRAL';
+  var b=$('bias-badge');
+  if(Math.abs(pct)<0.05){
+    b.style.background='rgba(80,80,80,0.15)'; b.style.borderColor='rgba(255,255,255,0.1)'; b.style.color='#888'; b.textContent='NEUTRAL';
   } else if(up){
-    b.style.background = 'rgba(99,153,34,0.15)';
-    b.style.borderColor = 'rgba(99,153,34,0.25)';
-    b.style.color = '#97C459';
-    b.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg> BULLISH';
+    b.style.background='rgba(99,153,34,0.15)'; b.style.borderColor='rgba(99,153,34,0.25)'; b.style.color='#97C459';
+    b.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg> BULLISH';
   } else {
-    b.style.background = 'rgba(239,68,68,0.12)';
-    b.style.borderColor = 'rgba(239,68,68,0.25)';
-    b.style.color = '#EF4444';
-    b.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,18 13.5,8.5 8.5,13.5 1,6"/><polyline points="17,18 23,18 23,12"/></svg> BEARISH';
+    b.style.background='rgba(239,68,68,0.12)'; b.style.borderColor='rgba(239,68,68,0.25)'; b.style.color='#EF4444';
+    b.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,18 13.5,8.5 8.5,13.5 1,6"/><polyline points="17,18 23,18 23,12"/></svg> BEARISH';
   }
 }
 
-// ─── CHART RENDERING ────────────────────────────────────────────────────────
-function noDataMsg(label){
-  var svg = $('chart-svg');
-  if(!svg) return;
-  svg.innerHTML = '<text x="200" y="54" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#333">' + (label||'Waiting for live ticks…') + '</text>';
+// ─── CHART RENDERING ─────────────────────────────────────────────────────────
+function noDataMsg(txt){
+  var svg=$('chart-svg'); if(!svg) return;
+  svg.innerHTML='<text x="200" y="54" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#333">'+txt+'</text>';
 }
 
 function drawLine(){
-  var svg = $('chart-svg');
-  if(!svg) return;
-  var W=400, H=100;
-  var d = lineHist.slice(-120);
-  if(d.length < 2){ noDataMsg('Waiting for live ticks…'); return; }
-  var mn = Math.min.apply(null,d) - 0.001;
-  var mx = Math.max.apply(null,d) + 0.001;
-  var rng = mx - mn || 1;
-  var pts = d.map(function(v,i){
-    return [ i*(W/(d.length-1)), H - ((v-mn)/rng)*(H-12) - 6 ];
-  });
-  var path = pts.map(function(p,i){ return (i===0?'M':'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
-  var fill = path + ' L' + pts[pts.length-1][0].toFixed(1) + ',' + H + ' L0,' + H + ' Z';
-  svg.innerHTML =
-    '<defs><linearGradient id="lgrad" x1="0" y1="0" x2="0" y2="1">'
-    + '<stop offset="0%" stop-color="#F0B429" stop-opacity="0.22"/>'
-    + '<stop offset="100%" stop-color="#F0B429" stop-opacity="0"/></linearGradient></defs>'
-    + '<path d="' + fill + '" fill="url(#lgrad)"/>'
-    + '<path d="' + path + '" fill="none" stroke="#F0B429" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>'
-    + '<circle cx="' + pts[pts.length-1][0].toFixed(1) + '" cy="' + pts[pts.length-1][1].toFixed(1) + '" r="3.2" fill="#F0B429"/>';
+  var svg=$('chart-svg'); if(!svg) return;
+  var W=400,H=100,d=lineHist.slice(-120);
+  if(d.length<2){ noDataMsg('Waiting for data…'); return; }
+  var mn=Math.min.apply(null,d)-0.001, mx=Math.max.apply(null,d)+0.001, rng=mx-mn||1;
+  var pts=d.map(function(v,i){ return [i*(W/(d.length-1)),H-((v-mn)/rng)*(H-12)-6]; });
+  var path=pts.map(function(p,i){ return (i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1); }).join(' ');
+  var fill=path+' L'+pts[pts.length-1][0].toFixed(1)+','+H+' L0,'+H+' Z';
+  svg.innerHTML='<defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0%" stop-color="#F0B429" stop-opacity="0.22"/>'
+    +'<stop offset="100%" stop-color="#F0B429" stop-opacity="0"/></linearGradient></defs>'
+    +'<path d="'+fill+'" fill="url(#lg)"/>'
+    +'<path d="'+path+'" fill="none" stroke="#F0B429" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>'
+    +'<circle cx="'+pts[pts.length-1][0].toFixed(1)+'" cy="'+pts[pts.length-1][1].toFixed(1)+'" r="3.2" fill="#F0B429"/>';
 }
 
 function drawCandles(){
-  var svg = $('chart-svg');
-  if(!svg) return;
-  var W=400, H=100, PAD=4;
-  var d = bars.slice(-60);
-  if(!d.length){ noDataMsg('Candle history requires Finnhub premium'); return; }
-  var n = d.length;
-  var slot = (W - PAD*2) / n;
-  var cw   = Math.max(2, slot - 1.4);
-  var mn = Math.min.apply(null, d.map(function(b){return b.l;}));
-  var mx = Math.max.apply(null, d.map(function(b){return b.h;}));
-  var rng = mx - mn || 1;
-  function y(v){ return H - ((v - mn)/rng)*(H-10) - 5; }
-
-  var html = '';
-  d.forEach(function(b, i){
-    var x = PAD + i * slot;
-    var cx = x + cw/2;
-    var up = b.c >= b.o;
-    var stroke = up ? '#639922' : '#EF4444';
-    var fill   = up ? 'rgba(99,153,34,0.85)' : 'rgba(239,68,68,0.85)';
-    var yH = y(b.h), yL = y(b.l);
-    var yO = y(b.o), yC = y(b.c);
-    var top = Math.min(yO, yC);
-    var bh  = Math.max(1, Math.abs(yO - yC));
-    html += '<line x1="' + cx.toFixed(1) + '" y1="' + yH.toFixed(1) + '" x2="' + cx.toFixed(1) + '" y2="' + yL.toFixed(1) + '" stroke="' + stroke + '" stroke-width="1"/>';
-    html += '<rect x="' + x.toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + cw.toFixed(1) + '" height="' + bh.toFixed(1) + '" fill="' + fill + '" rx="0.5"/>';
+  var svg=$('chart-svg'); if(!svg) return;
+  var W=400,H=100,PAD=4,d=bars.slice(-60);
+  if(!d.length){ noDataMsg('Candle history not yet available'); return; }
+  var n=d.length, slot=(W-PAD*2)/n, cw=Math.max(2,slot-1.4);
+  var mn=Math.min.apply(null,d.map(function(b){return b.l;}));
+  var mx=Math.max.apply(null,d.map(function(b){return b.h;}));
+  var rng=mx-mn||1;
+  function y(v){ return H-((v-mn)/rng)*(H-10)-5; }
+  var html='';
+  d.forEach(function(b,i){
+    var x=PAD+i*slot, cx=x+cw/2, up=b.c>=b.o;
+    var stroke=up?'#639922':'#EF4444', fill=up?'rgba(99,153,34,0.85)':'rgba(239,68,68,0.85)';
+    var top=Math.min(y(b.o),y(b.c)), bh=Math.max(1,Math.abs(y(b.o)-y(b.c)));
+    html+='<line x1="'+cx.toFixed(1)+'" y1="'+y(b.h).toFixed(1)+'" x2="'+cx.toFixed(1)+'" y2="'+y(b.l).toFixed(1)+'" stroke="'+stroke+'" stroke-width="1"/>';
+    html+='<rect x="'+x.toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+cw.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+fill+'" rx="0.5"/>';
   });
-  svg.innerHTML = html;
+  svg.innerHTML=html;
 }
 
 function drawChart(){
-  if(currentChart === 'line') drawLine();
-  else drawCandles();
+  if(currentChart==='line') drawLine(); else drawCandles();
 }
 
-// ─── SYMBOL / CHART SWITCHING ───────────────────────────────────────────────
+// ─── SYMBOL / CHART SWITCHING ────────────────────────────────────────────────
 function switchSymbol(sym){
-  if(sym === currentSymbol) return;
-  currentSymbol = sym;
-  document.querySelectorAll('.sym-tab').forEach(function(t){
-    t.classList.toggle('active', t.getAttribute('data-sym') === sym);
-  });
-  var s = SYMBOLS[sym];
-  $('price-label').textContent = s.label;
-  var ic = $('symbol-icon');
-  ic.textContent = s.icon;
-  ic.style.background = s.iconBg;
-  ic.style.color = s.iconColor;
-  $('price-el').textContent = '—';
-  $('delta-text').textContent = '—';
-  latestPrice = 0; openPrice = 0; dayHigh = 0; dayLow = 0; prevClose = 0;
-  bars = []; lineHist = [];
-  renderTags();
-  renderChecklist();
+  if(sym===currentSymbol) return;
+  currentSymbol=sym;
+  document.querySelectorAll('.sym-tab').forEach(function(t){ t.classList.toggle('active',t.getAttribute('data-sym')===sym); });
+  var s=SYMBOLS[sym];
+  $('price-label').textContent=s.label;
+  var ic=$('symbol-icon'); ic.textContent=s.icon; ic.style.background=s.iconBg; ic.style.color=s.iconColor;
+  $('price-el').textContent='—'; $('delta-text').textContent='—';
+  latestPrice=0; openPrice=0; dayHigh=0; dayLow=0; prevClose=0; bars=[]; lineHist=[];
+  renderTags(); renderChecklist();
   initData();
 }
 
 function switchChart(type){
-  if(type === currentChart) return;
-  currentChart = type;
-  document.querySelectorAll('.chart-tab').forEach(function(t){
-    t.classList.toggle('active', t.getAttribute('data-type') === type);
-  });
-  if(dataMode === 'live'){
-    var s = SYMBOLS[currentSymbol];
-    fetchCandles(s.fh, type).then(function(c){
-      if(c.length){
-        bars = c;
-        if(type === 'line') lineHist = c.map(function(b){return b.c;});
-      }
-      drawChart();
-    }).catch(function(){ drawChart(); });
-    if(refreshTimer) clearInterval(refreshTimer);
-    refreshTimer = setInterval(refreshData, REFRESH_MS[type] || 30000);
-  } else {
-    drawChart();
-  }
+  if(type===currentChart) return;
+  currentChart=type;
+  document.querySelectorAll('.chart-tab').forEach(function(t){ t.classList.toggle('active',t.getAttribute('data-type')===type); });
+  drawChart();
 }
 
 // ─── CHECKLIST ───────────────────────────────────────────────────────────────
 function renderChecklist(){
-  var list = checklistState[currentSymbol];
-  var el = $('checklist-items');
-  if(!el) return;
-  var cnt = list.filter(function(i){return i.checked;}).length;
-  $('criteria-count').textContent = cnt + ' / ' + list.length + ' criteria met';
-  $('progress-bar').style.width = (cnt/list.length*100) + '%';
-  $('progress-bar').style.background = cnt >= 5 ? '#639922' : '#F0B429';
-  var bg = $('valid-badge');
-  if(cnt >= 5){
-    bg.style.background = 'rgba(99,153,34,0.18)';
-    bg.style.color = '#639922';
-    bg.textContent = 'VALID';
-  } else {
-    bg.style.background = 'rgba(239,68,68,0.15)';
-    bg.style.color = '#EF4444';
-    bg.textContent = 'WAIT';
-  }
-  el.innerHTML = list.map(function(item){
-    return '<div class="check-row" onclick="toggleCheck(' + item.id + ')">'
-      + '<div class="check-box' + (item.checked?' on':'') + '">'
-      + (item.checked
-          ? '<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="#639922" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-          : '')
-      + '</div>'
-      + '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:' + (item.checked?'#D0D0D0':'#333') + ';">' + item.label + '</span>'
-      + '</div>';
+  var list=checklistState[currentSymbol], el=$('checklist-items'); if(!el) return;
+  var cnt=list.filter(function(i){return i.checked;}).length;
+  $('criteria-count').textContent=cnt+' / '+list.length+' criteria met';
+  $('progress-bar').style.width=(cnt/list.length*100)+'%';
+  $('progress-bar').style.background=cnt>=5?'#639922':'#F0B429';
+  var bg=$('valid-badge');
+  if(cnt>=5){ bg.style.background='rgba(99,153,34,0.18)'; bg.style.color='#639922'; bg.textContent='VALID'; }
+  else       { bg.style.background='rgba(239,68,68,0.15)'; bg.style.color='#EF4444'; bg.textContent='WAIT'; }
+  el.innerHTML=list.map(function(item){
+    return '<div class="check-row" onclick="toggleCheck('+item.id+')">'
+      +'<div class="check-box'+(item.checked?' on':'')+'">'+
+       (item.checked?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="#639922" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':'')
+      +'</div>'
+      +'<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+(item.checked?'#D0D0D0':'#333')+';">'+item.label+'</span>'
+      +'</div>';
   }).join('');
 }
 
 function toggleCheck(id){
-  var list = checklistState[currentSymbol];
-  list.forEach(function(i){ if(i.id===id) i.checked = !i.checked; });
+  checklistState[currentSymbol].forEach(function(i){ if(i.id===id) i.checked=!i.checked; });
   renderChecklist();
 }
 
-// ─── TAGS / SESSIONS / TICKER ───────────────────────────────────────────────
+// ─── TAGS / SESSIONS / TICKER ────────────────────────────────────────────────
 function renderTags(){
-  $('analysis-tags').innerHTML = (TAGS[currentSymbol] || [])
-    .map(function(t){ return '<div class="tag">' + t + '</div>'; })
-    .join('');
+  $('analysis-tags').innerHTML=(TAGS[currentSymbol]||[]).map(function(t){ return '<div class="tag">'+t+'</div>'; }).join('');
 }
 
 function renderSessions(){
-  var now = new Date();
-  var nyStr = now.toLocaleString('en-US', { timeZone:'America/New_York', hour12:false, hour:'2-digit', minute:'2-digit' });
-  var parts = nyStr.split(':');
-  var nyH = parseInt(parts[0], 10) + parseInt(parts[1], 10)/60;
-
-  var sessions = [
-    { name:'Tokyo',    open: nyH >= 19 || nyH < 4 },
-    { name:'London',   open: nyH >= 3  && nyH < 12 },
-    { name:'New York', open: nyH >= 9.5 && nyH < 16 }
+  var now=new Date();
+  var nyStr=now.toLocaleString('en-US',{timeZone:'America/New_York',hour12:false,hour:'2-digit',minute:'2-digit'});
+  var parts=nyStr.split(':'), nyH=parseInt(parts[0],10)+parseInt(parts[1],10)/60;
+  var sessions=[
+    {name:'Tokyo',    open:nyH>=19||nyH<4},
+    {name:'London',   open:nyH>=3&&nyH<12},
+    {name:'New York', open:nyH>=9.5&&nyH<16},
   ];
-  $('sessions-list').innerHTML = sessions.map(function(s){
-    var dot = s.open
-      ? '<div class="breathe" style="width:7px;height:7px;border-radius:50%;background:#639922;flex-shrink:0;"></div>'
-      : '<div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.1);flex-shrink:0;"></div>';
-    var name = s.open
-      ? '<span style="font-size:13px;color:#D8D8D8;font-weight:500;">' + s.name + '</span>'
-      : '<span style="font-size:13px;color:#444;">' + s.name + '</span>';
-    var status = s.open
-      ? '<span class="mono" style="font-size:11px;color:#639922;">OPEN</span>'
-      : '<span class="mono" style="font-size:11px;color:#2A2A2A;">CLOSED</span>';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;">'
-      + '<div style="display:flex;align-items:center;gap:9px;">' + dot + name + '</div>'
-      + status + '</div>';
+  $('sessions-list').innerHTML=sessions.map(function(s){
+    var dot=s.open
+      ?'<div class="breathe" style="width:7px;height:7px;border-radius:50%;background:#639922;flex-shrink:0;"></div>'
+      :'<div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.1);flex-shrink:0;"></div>';
+    var name=s.open?'<span style="font-size:13px;color:#D8D8D8;font-weight:500;">'+s.name+'</span>':'<span style="font-size:13px;color:#444;">'+s.name+'</span>';
+    var status=s.open?'<span class="mono" style="font-size:11px;color:#639922;">OPEN</span>':'<span class="mono" style="font-size:11px;color:#2A2A2A;">CLOSED</span>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;"><div style="display:flex;align-items:center;gap:9px;">'+dot+name+'</div>'+status+'</div>';
   }).join('');
 }
 
 function renderTicker(){
-  var html = TICKER_ITEMS.map(function(t){
-    return '<span style="font-size:11.5px;color:#555;font-family:\'JetBrains Mono\',monospace;padding-right:48px;"><span style="color:#F0B429;margin-right:7px;">·</span>' + t + '</span>';
+  var html=TICKER_ITEMS.map(function(t){
+    return '<span style="font-size:11.5px;color:#555;font-family:\'JetBrains Mono\',monospace;padding-right:48px;"><span style="color:#F0B429;margin-right:7px;">·</span>'+t+'</span>';
   }).join('');
-  $('ticker-content').innerHTML  = html;
-  $('ticker-content-2').innerHTML = html;
+  $('ticker-content').innerHTML=$('ticker-content-2').innerHTML=html;
 }
 
-// ─── TYPEWRITER ──────────────────────────────────────────────────────────────
-var twIdx=0, twChar=0, twDel=false, twText='', twSym='GC1!';
+// ─── TYPEWRITER ───────────────────────────────────────────────────────────────
+var twIdx=0,twChar=0,twDel=false,twText='',twSym='GC1!';
 function tickTW(){
-  var prompts = PROMPTS[currentSymbol] || [];
-  if(twSym !== currentSymbol){ twIdx=0; twChar=0; twDel=false; twText=''; twSym=currentSymbol; }
-  if(!prompts.length){ setTimeout(tickTW, 400); return; }
-  var p = prompts[twIdx % prompts.length];
-  var speed = twDel ? 20 : 50;
-  if(!twDel && twChar < p.length){ twChar++; twText = p.slice(0,twChar); }
-  else if(!twDel && twChar === p.length){ setTimeout(function(){ twDel=true; }, 2200); }
-  else if(twDel && twChar > 0){ twChar--; twText = p.slice(0,twChar); }
-  else { twDel=false; twIdx = (twIdx+1) % prompts.length; }
-  var el = $('typewriter-el'); if(el) el.textContent = twText;
-  setTimeout(tickTW, speed);
+  var prompts=PROMPTS[currentSymbol]||[];
+  if(twSym!==currentSymbol){twIdx=0;twChar=0;twDel=false;twText='';twSym=currentSymbol;}
+  if(!prompts.length){setTimeout(tickTW,400);return;}
+  var p=prompts[twIdx%prompts.length],speed=twDel?20:50;
+  if(!twDel&&twChar<p.length){twChar++;twText=p.slice(0,twChar);}
+  else if(!twDel&&twChar===p.length){setTimeout(function(){twDel=true;},2200);}
+  else if(twDel&&twChar>0){twChar--;twText=p.slice(0,twChar);}
+  else{twDel=false;twIdx=(twIdx+1)%prompts.length;}
+  var el=$('typewriter-el');if(el)el.textContent=twText;
+  setTimeout(tickTW,speed);
 }
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────────────────────────
 function init(){
   renderTicker();
   renderTags();
   renderChecklist();
   renderSessions();
-  setInterval(renderSessions, 60000);
-  setTimeout(tickTW, 500);
-  window.addEventListener('resize', drawChart);
+  setInterval(renderSessions,60000);
+  setTimeout(tickTW,500);
+  window.addEventListener('resize',drawChart);
   initData();
 }
 
