@@ -482,7 +482,14 @@ function fetchQuote(fhSymbol){
     if(!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   }).then(function(d){
-    if(d && d.error) throw new Error(d.error);
+    if(d && d.error){
+      var e = d.error.toLowerCase();
+      if(e.indexOf('allowlist') >= 0 || e.indexOf('whitelist') >= 0)
+        throw new Error('allowlist');
+      if(e.indexOf('api key') >= 0 || e.indexOf('invalid') >= 0)
+        throw new Error('401');
+      throw new Error(d.error);
+    }
     return d;
   });
 }
@@ -606,7 +613,9 @@ function initData(){
     var msg = (err && err.message) || 'unknown';
     console.error('[Terminal] fetchQuote error:', msg, err);
     var label, detail;
-    if(msg.indexOf('401') >= 0 || msg.toLowerCase().indexOf('api key') >= 0){
+    if(msg === 'allowlist'){
+      label = 'BLOCKED'; detail = 'Host not in allowlist — go to finnhub.io/dashboard → API key settings and clear the domain restriction (or add *)';
+    } else if(msg.indexOf('401') >= 0 || msg.toLowerCase().indexOf('api key') >= 0){
       label = 'BAD KEY'; detail = 'Invalid API key — check finnhub.io/dashboard';
     } else if(msg.indexOf('429') >= 0){
       label = 'RATE LIMIT'; detail = 'Too many requests — wait a minute and retry';
