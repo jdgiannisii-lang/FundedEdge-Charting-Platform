@@ -6,6 +6,25 @@
 <title>GC Futures Terminal</title>
 </head>
 <body>
-<script>window.location.replace("GC.html");</script>
+<h2>Stock Demo</h2>
+
+<input id="symbol" placeholder="Enter ticker (AAPL)" />
+<button onclick="getStock()">Get Price</button>
+
+<p id="output"></p>
+<script>
+async function getStock() {
+  const symbol = document.getElementById("symbol").value || "AAPL";
+
+  const res = await fetch(
+    `https://verc-jd-s-projects2.vercel.app/api/stock?symbol=${symbol}`
+  );
+
+  const data = await res.json();
+
+  document.getElementById("output").innerText =
+    `${symbol.toUpperCase()} $${data.c} (${data.dp.toFixed(2)}%)`;
+}
+</script>
 </body>
 </html>
