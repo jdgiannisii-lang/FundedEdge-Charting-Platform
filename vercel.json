@@ -1,15 +1,11 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "api/stock.js",
-      "use": "@vercel/node"
-    }
+    { "src": "api/stock.js",   "use": "@vercel/node" },
+    { "src": "api/candles.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/api/stock",
-      "dest": "/api/stock.js"
-    }
+    { "src": "/api/stock",   "dest": "/api/stock.js"   },
+    { "src": "/api/candles", "dest": "/api/candles.js" }
   ]
 }
