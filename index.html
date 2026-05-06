@@ -765,7 +765,19 @@ function loadChartData(){
       if(token !== chart.reqToken) return; // a newer request superseded us
       if(!resp.ok || !resp.body || resp.body.s !== 'ok' || !Array.isArray(resp.body.t) || !resp.body.t.length){
         chart.status = 'error';
-        chart.statusMsg = (resp.body && resp.body.error) ? resp.body.error : ('HTTP ' + resp.status);
+        var b = resp.body || {};
+        var msg = b.error || ('HTTP ' + resp.status);
+        // If the backend reports per-source failures, surface the most useful one.
+        if(Array.isArray(b.tried) && b.tried.length){
+          var first = b.tried[0];
+          var detail = first.detail || first.error || ('status ' + (first.status || '?'));
+          msg += ' — ' + first.src + ': ' + String(detail).slice(0, 80);
+        } else if(b.detail){
+          msg += ' — ' + String(b.detail).slice(0, 80);
+        }
+        if(b.version) msg += '  [' + b.version + ']';
+        chart.statusMsg = msg;
+        try { console.warn('[candles]', b); } catch(_){}
         renderChart();
         return;
       }
