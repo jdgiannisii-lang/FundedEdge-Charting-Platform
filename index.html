@@ -340,6 +340,13 @@ var TF_CONFIG = {
 var TF_BARS = { '1D': 78, '1W': 65, '1M': 22, '3M': 65, '1Y': 252 };
 var CHART_PAD = { L: 8, R: 64, T: 12, B: 28 };
 
+// Interval duration in seconds — used for live candle formation and countdown.
+var INTERVAL_SECS = {
+  '1m':60,'2m':120,'5m':300,'15m':900,'30m':1800,
+  '60m':3600,'90m':5400,'1h':3600,
+  '1d':86400,'5d':432000,'1wk':604800,'1mo':2592000,'3mo':7776000,
+};
+
 // ─── STATE ───────────────────────────────────────────────────────────────────
 var currentSymbol    = 'GC1!';
 var currentTF        = '1D';
@@ -365,8 +372,10 @@ var prevClose      = 0;
 var dayHigh        = 0;
 var dayLow         = 0;
 var dataMode       = 'live';
-var pollTimer      = null;
-var demoTimer      = null;
+var pollTimer        = null;
+var demoTimer        = null;
+var autoReloadTimer  = null;  // fires when the current candle bar closes
+var latestQuoteTime  = 0;     // unix seconds of last Finnhub trade tick
 var checklistState = {};
 
 Object.keys(CHECKLISTS).forEach(function(s){
@@ -393,8 +402,9 @@ function fetchQuote(symbol){
 
 // ─── DATA INIT ───────────────────────────────────────────────────────────────
 function clearTimers(){
-  if(pollTimer)  { clearInterval(pollTimer);  pollTimer  = null; }
-  if(demoTimer)  { clearInterval(demoTimer);  demoTimer  = null; }
+  if(pollTimer)       { clearInterval(pollTimer);      pollTimer       = null; }
+  if(demoTimer)       { clearInterval(demoTimer);      demoTimer       = null; }
+  if(autoReloadTimer) { clearTimeout(autoReloadTimer); autoReloadTimer = null; }
 }
 
 function initData(){
@@ -421,19 +431,15 @@ function initData(){
 
     pollTimer = setInterval(function(){
       fetchQuote(sym.fh).then(function(d){
-        latestPrice = d.c  || latestPrice;
-        openPrice   = d.o  || openPrice;
-        prevClose   = d.pc || prevClose;
-        dayHigh     = d.h  || dayHigh;
-        dayLow      = d.l  || dayLow;
+        latestPrice     = d.c  || latestPrice;
+        openPrice       = d.o  || openPrice;
+        prevClose       = d.pc || prevClose;
+        dayHigh         = d.h  || dayHigh;
+        dayLow          = d.l  || dayLow;
+        latestQuoteTime = d.t  || latestQuoteTime;
         lineHist.push(latestPrice);
         if(lineHist.length > 200) lineHist.shift();
-        if(chart.data.length){
-          var last = chart.data[chart.data.length - 1];
-          last.c = latestPrice;
-          if(latestPrice > last.h) last.h = latestPrice;
-          if(latestPrice < last.l) last.l = latestPrice;
-        }
+        updateLiveCandle(latestPrice);
         updatePriceDisplay();
         renderChart();
       }).catch(function(){ setConn('error', 'POLL ERR'); });
@@ -524,6 +530,81 @@ function updatePriceDisplay(){
   }
 }
 
+// ─── LIVE CANDLE ENGINE ───────────────────────────────────────────────────────
+
+function getIntervalSecs(){
+  var cfg = TF_CONFIG[currentTF];
+  return (cfg && INTERVAL_SECS[cfg.interval]) || 300;
+}
+
+// Called on every price poll. Updates the live (last) bar's OHLC and, for
+// intraday TFs, synthesises a new bar when the clock ticks into a new bucket.
+function updateLiveCandle(price){
+  if(!price || !chart.data.length) return;
+  var secs = getIntervalSecs();
+  var last = chart.data[chart.data.length - 1];
+
+  if(secs >= 86400){
+    // Daily bars: just keep close / high / low live; no bucket arithmetic.
+    last.c = price;
+    if(price > last.h) last.h = price;
+    if(price < last.l) last.l = price;
+    return;
+  }
+
+  var now    = Math.floor(Date.now() / 1000);
+  var bucket = Math.floor(now / secs) * secs;
+
+  if(last.t === bucket){
+    last.c = price;
+    if(price > last.h) last.h = price;
+    if(price < last.l) last.l = price;
+  } else if(bucket > last.t){
+    // New bar — only create it if the quote is fresh (market is open).
+    var quoteAge = latestQuoteTime ? (now - latestQuoteTime) : 0;
+    if(!latestQuoteTime || quoteAge < 900){
+      var prevC = last.c;
+      chart.data.push({
+        t: bucket,
+        o: prevC,
+        h: Math.max(prevC, price),
+        l: Math.min(prevC, price),
+        c: price,
+        v: 0,
+      });
+      if(chart.data.length > 2000) chart.data.shift();
+    }
+  }
+}
+
+// Returns a MM:SS string counting down to the next bar close, or null for
+// hourly+ intervals where a per-second countdown is not useful.
+function getCandleCountdown(){
+  var secs = getIntervalSecs();
+  if(secs >= 3600) return null;
+  var now       = Date.now() / 1000;
+  var remaining = ((Math.floor(now / secs) + 1) * secs) - now;
+  if(remaining < 0) remaining = 0;
+  var m = Math.floor(remaining / 60);
+  var s = Math.floor(remaining % 60);
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+// Schedules a one-shot reload so the chart refreshes at the exact moment the
+// current candle closes and a new one would open. Only wired for intraday TFs.
+function scheduleAutoReload(){
+  if(autoReloadTimer){ clearTimeout(autoReloadTimer); autoReloadTimer = null; }
+  var secs = getIntervalSecs();
+  if(secs >= 86400) return;
+  var now         = Date.now() / 1000;
+  var nextBucket  = (Math.floor(now / secs) + 1) * secs;
+  var msUntilNext = Math.max(5000, (nextBucket - now) * 1000 + 3000); // +3 s buffer
+  autoReloadTimer = setTimeout(function(){
+    autoReloadTimer = null;
+    if(chart.status !== 'loading') loadChartData();
+  }, msUntilNext);
+}
+
 // ─── CHART ENGINE ─────────────────────────────────────────────────────────────
 function drawChartStatus(ctx, W, H){
   if(chart.status === 'idle' || !chart.statusMsg) return;
@@ -584,6 +665,21 @@ function renderChart(){
 
   ctx.fillStyle = '#141416';
   ctx.fillRect(0, 0, W, H);
+
+  // ── TF + interval label (always visible, even during loading) ────────────
+  var _tfcfg = TF_CONFIG[currentTF];
+  if(_tfcfg){
+    ctx.textAlign = 'left';
+    ctx.font = 'bold 10px JetBrains Mono,monospace';
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.fillText(currentTF + ' · ' + _tfcfg.interval, PL + 6, PT + 14);
+    var _cd = getCandleCountdown();
+    if(_cd){
+      ctx.font = '9px JetBrains Mono,monospace';
+      ctx.fillStyle = 'rgba(255,255,255,0.16)';
+      ctx.fillText('closes ' + _cd, PL + 6, PT + 26);
+    }
+  }
 
   var d = chart.data;
   if(!d.length && lineHist.length > 1){
@@ -789,6 +885,7 @@ function loadChartData(){
       chart.barsVisible = Math.min(TF_BARS[currentTF] || 78, chart.data.length);
       chart.status      = 'idle';
       chart.statusMsg   = '';
+      scheduleAutoReload();
       renderChart();
     })
     .catch(function(err){
@@ -900,6 +997,9 @@ function initChartEngine(){
 
   // Show the loading skeleton immediately, before the first network round-trip
   renderChart();
+
+  // 1-second tick so the candle countdown updates every second, not just on polls.
+  setInterval(renderChart, 1000);
 }
 
 // ─── SYMBOL / CHART SWITCHING ────────────────────────────────────────────────
