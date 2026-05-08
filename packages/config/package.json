@@ -1,0 +1,16 @@
+{
+  "name": "@fundededge/config",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./tsconfig.react.json": "./tsconfig.react.json",
+    "./biome.json": "./biome.json",
+    "./vitest": "./vitest.config.base.ts"
+  },
+  "scripts": {
+    "lint": "echo 'No linting for config package'",
+    "typecheck": "echo 'No typechecking for config package'",
+    "build": "echo 'No build for config package'"
+  }
+}
