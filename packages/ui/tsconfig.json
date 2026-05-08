@@ -1,0 +1,9 @@
+{
+  "extends": "@fundededge/config/tsconfig.react.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "stories/**/*.ts", "stories/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}
