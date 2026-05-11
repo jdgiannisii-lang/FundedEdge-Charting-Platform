@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint ./src",
     "lint:fix": "biome lint --write ./src",
+    "test:e2e": "playwright test",
     "clean": "rm -rf .next .turbo"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "tailwind-merge": "^2.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.0",
