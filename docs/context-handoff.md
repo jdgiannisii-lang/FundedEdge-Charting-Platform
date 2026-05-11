@@ -56,7 +56,11 @@ docs/tasks/11-marketing-site.md
 | 11 | Marketing Site | 01 |
 
 ## Next action
-Task 01 is next. Run the 5 daily prompts from `docs/tasks/01-monorepo-bootstrap-daily.md` in order on branch `feat/01-monorepo-bootstrap`. After Day 5 merges, Task 02 is unblocked.
+Task 01 is next. The docs/planning files are committed but the actual monorepo
+scaffold does not exist yet (no package.json, no pnpm-workspace.yaml, no apps/,
+no packages/, etc.). Run the 5 daily prompts from
+`docs/tasks/01-monorepo-bootstrap-daily.md` in order starting with Day 1, on
+branch `feat/01-monorepo-bootstrap`. After Day 5 merges, Task 02 is unblocked.
 
 ## Stack (locked — no deviations without ADR)
 Next.js 15, TypeScript strict, Tailwind v4, shadcn/ui, Zustand, TanStack Query, Supabase, TradingView Advanced Charts, Databento, Vercel, Resend, Sentry, PostHog, Turborepo, pnpm, Biome, Vitest, Playwright, Storybook 8
