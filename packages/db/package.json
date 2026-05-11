@@ -1,0 +1,19 @@
+{
+  "name": "@fundededge/db",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint ./src",
+    "lint:fix": "biome lint --write ./src",
+    "clean": "rm -rf dist .turbo"
+  },
+  "devDependencies": {
+    "@fundededge/config": "workspace:*",
+    "typescript": "^5.6.0"
+  }
+}

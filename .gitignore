@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+.next
+out
+dist
+.turbo
+
+# Testing
+coverage
+playwright-report
+test-results
+.playwright
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Misc
+.DS_Store
+*.tgz
+*.log
+.vercel
+.changeset/*.md
+!.changeset/README.md
