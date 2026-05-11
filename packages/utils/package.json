@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint ./src",
     "lint:fix": "biome lint --write ./src",
-    "test:unit": "vitest run",
+    "test:unit": "vitest run --passWithNoTests",
     "clean": "rm -rf dist .turbo"
   },
   "devDependencies": {
