@@ -35,7 +35,6 @@ branch from `main`; Days 2–5 check it out.
 
 ## Day 1 — Workspace skeleton
 
-
 ```
 You are continuing Task 01 from docs/tasks/01-monorepo-bootstrap.md.
 Today is Day 1 of 5: workspace skeleton only. Do not create app code,
@@ -65,12 +64,9 @@ the push completes. Do not summarize the spec back — just confirm the
 commit SHA in one line.
 ```
 
-
-
 ---
 
 ## Day 2 — Apps placeholders
-
 
 ```
 You are continuing Task 01 from docs/tasks/01-monorepo-bootstrap.md.
@@ -100,12 +96,9 @@ Steps:
 Confirm the commit SHA in one line. Stop.
 ```
 
-
-
 ---
 
 ## Day 3 — Packages skeleton
-
 
 ```
 You are continuing Task 01 from docs/tasks/01-monorepo-bootstrap.md.
@@ -138,12 +131,9 @@ Steps:
 Confirm the commit SHA in one line. Stop.
 ```
 
-
-
 ---
 
 ## Day 4 — Tooling: Vitest, Playwright, Storybook, Husky
-
 
 ```
 You are continuing Task 01 from docs/tasks/01-monorepo-bootstrap.md.
@@ -176,12 +166,9 @@ Steps:
 Confirm the commit SHA in one line. Stop.
 ```
 
-
-
 ---
 
 ## Day 5 — CI + verification + registry update
-
 
 ```
 You are continuing Task 01 from docs/tasks/01-monorepo-bootstrap.md.
@@ -207,7 +194,6 @@ Do NOT open a PR — leave that to the human. Do NOT run pnpm install or
 tests in this routine; CI will run them on push. Confirm the commit SHA
 in one line. Stop.
 ```
-
 
 ---
 
