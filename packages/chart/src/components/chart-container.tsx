@@ -1,5 +1,3 @@
-import type * as React from 'react';
-
 export interface ChartContainerProps {
   symbol: string;
   interval?: string;
