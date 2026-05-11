@@ -18,7 +18,7 @@ export function evaluate(state: AccountState, config: RulesConfig): Verdict {
   } else if (Math.abs(effectivePnl) >= config.maxDailyLoss * WARNING_THRESHOLD) {
     warnings.push({
       rule: 'maxDailyLoss',
-      message: `Approaching daily loss limit`,
+      message: 'Approaching daily loss limit',
       value: Math.abs(effectivePnl),
       limit: config.maxDailyLoss,
       proximityPercent: (Math.abs(effectivePnl) / config.maxDailyLoss) * 100,
