@@ -20,6 +20,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^19.0.0
         version: 19.8.1
+      '@playwright/test':
+        specifier: ^1.49.0
+        version: 1.60.0
       husky:
         specifier: ^9.0.0
         version: 9.1.7
