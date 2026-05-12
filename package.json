@@ -19,6 +19,9 @@
     "clean": "turbo clean && rm -rf node_modules",
     "prepare": "husky"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild", "sharp", "supabase"]
+  },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
     "@biomejs/biome": "^1.9.0",
