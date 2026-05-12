@@ -10,10 +10,12 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint ./src",
     "lint:fix": "biome lint --write ./src",
+    "test:unit": "vitest run --passWithNoTests",
     "clean": "rm -rf dist .turbo"
   },
   "devDependencies": {
     "@fundededge/config": "workspace:*",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
   }
 }

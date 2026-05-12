@@ -130,6 +130,9 @@ importers:
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@25.7.0)(lightningcss@1.32.0)
 
   packages/config: {}
 
@@ -141,6 +144,9 @@ importers:
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@25.7.0)(lightningcss@1.32.0)
 
   packages/db:
     devDependencies:
@@ -150,6 +156,9 @@ importers:
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@25.7.0)(lightningcss@1.32.0)
 
   packages/rules-engine:
     devDependencies:
@@ -171,6 +180,9 @@ importers:
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@25.7.0)(lightningcss@1.32.0)
 
   packages/ui:
     devDependencies:
@@ -207,6 +219,9 @@ importers:
       vite:
         specifier: ^5.4.21
         version: 5.4.21(@types/node@25.7.0)(lightningcss@1.32.0)
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@25.7.0)(lightningcss@1.32.0)
 
   packages/utils:
     devDependencies:
