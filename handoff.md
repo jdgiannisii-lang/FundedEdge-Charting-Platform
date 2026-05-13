@@ -1,8 +1,8 @@
 # Session Handoff
 
-**Branch:** `feat/02-s3-triggers` (PR #29 — in review)
+**Branch:** `feat/02-s4-rls-policies` (PR #30 — in review)
 **Date written:** 2026-05-13
-**Written by:** Claude Sonnet 4.6
+**Written by:** Claude Opus 4.7 (extra-high effort)
 
 ---
 
@@ -10,7 +10,7 @@
 
 FundedEdge — a trading cockpit for ICT-style prop firm traders. The product helps traders stay funded by surfacing rule violations before they happen.
 
-This session was working on **Task 02: Supabase Schema, RLS, Migrations, and Types**. Task 02 is the database foundation everything else builds on. It is broken into 14 sessions documented in `docs/tasks/02-breakdown.md`. That doc is the source of truth for what's done, what's next, and what tier runs each session.
+This session executed **S4 — RLS Policies**, the most security-critical migration in the entire codebase. Task 02 is broken into 14 sessions documented in `docs/tasks/02-breakdown.md`. That doc is the source of truth for what's done, what's next, and what tier runs each session.
 
 ---
 
@@ -22,7 +22,8 @@ In this order:
 2. `docs/tasks/02-breakdown.md` — the 14-session plan for Task 02; contains session status table
 3. `docs/architecture/data-model.md` — every table, column, constraint, trigger, RLS policy, and index
 4. `docs/tasks/02-supabase-schema.md` — acceptance criteria and file structure for Task 02
-5. This file
+5. `docs/tasks/02-verify.md` — read-only end-to-end verification runbook
+6. This file
 
 ---
 
@@ -35,9 +36,11 @@ In this order:
 | S0 — Supabase project + CLI | 🟢 Done | — | Project `fundededge-prod` provisioned, CLI v2.98.2, Docker verified |
 | S1 — Scaffold `packages/db` | 🟢 Done | #27 | Files created, `supabase init` run, typecheck passes |
 | S2 — Migration 1 (schema) | 🟢 Done | #28 | 12 public tables, applies cleanly on fresh local DB |
-| S3 — Migration 2 (triggers) | 🔵 In review | #29 | Three triggers verified locally; awaiting CI + merge |
-| S4 — Migration 3 (RLS) | 🔴 Not started | — | — |
-| S5–S13 | 🔴 Not started | — | — |
+| S3 — Migration 2 (triggers) | 🟢 Done | #29 | Three trigger functions verified locally; merged |
+| S4 — Migration 3 (RLS) | 🔵 In review | #30 | 12 RLS-enabled tables, 19 policies, 10/10 adversarial tests pass |
+| S5 — Migrations 4 + 5 | 🔴 Not started | — | 🟢 Light tier — hand to Ollama |
+| S6 — Local smoke test | 🔴 Not started | — | 🟣 User — visual verification in Studio |
+| S7–S13 | 🔴 Not started | — | — |
 
 ### What exists in `packages/db` right now
 
@@ -45,7 +48,7 @@ In this order:
 packages/db/
 ├── .gitignore
 ├── MIGRATIONS.md                                  # placeholder — filled in S12
-├── package.json                                   # full scripts + deps
+├── package.json
 ├── tsconfig.json
 ├── src/
 │   ├── index.ts                                   # empty stub — filled in S8
@@ -56,61 +59,81 @@ packages/db/
     ├── config.toml
     └── migrations/
         ├── 20260101000001_initial_schema.sql     # S2 — 12 tables
-        └── 20260101000002_triggers.sql           # S3 — 3 trigger functions
+        ├── 20260101000002_triggers.sql           # S3 — 3 trigger functions
+        └── 20260101000003_rls_policies.sql       # S4 — RLS + 19 policies
 ```
 
-### S3 verification results (already passed locally)
+### S4 verification results (already passed locally)
 
-All four spec-mandated trigger tests confirmed:
+**Static checks:**
+- `supabase db reset` applies all 3 migrations cleanly, zero errors
+- `pg_tables.rowsecurity = true` for all 12 public tables
+- `pg_policies` returns exactly 19 rows matching the per-table cross-check
 
-| Trigger | Test | Result |
+**Adversarial tests — 10/10 pass:**
+
+| # | Test | Result |
 |---|---|---|
-| `tg_create_profile` | Insert into `auth.users` | ✅ 1 profile + 1 user_preferences row |
-| `tg_update_highest_balance` (up) | current 50k → 52k | ✅ highest jumped to 52000 |
-| `tg_update_highest_balance` (down) | current 52k → 49k | ✅ highest stayed at 52000 |
-| `tg_set_updated_at` | Update profile | ✅ updated_at advanced |
+| 1 | User B reads accounts | ✅ 0 rows |
+| 2 | User A reads own accounts | ✅ 1 row |
+| 3 | User B insert spoofing user A's user_id | ✅ blocked |
+| 4 | User B updates user A account | ✅ 0 rows affected |
+| 5 | User B deletes user A account | ✅ 0 rows affected |
+| 6 | Anon reads accounts | ✅ 0 rows |
+| 7 | Anon reads prop_firms | ✅ unrestricted |
+| 8 | Anon insert into prop_firms | ✅ blocked |
+| 9 | Soft-deleted account hidden from owner | ✅ 0 rows |
+| 10 | User B insert trade spoofing user A | ✅ blocked |
 
-Plus `supabase db reset` applied both migrations with zero errors.
+---
+
+## Intentional deviations from `data-model.md` (called out in PR #30)
+
+These need the user's explicit OK during PR review — the migration ships either way, but both can be reverted if the team disagrees.
+
+### 1. `trades` is split into 4 policies (vs `for all` in data-model.md)
+
+Reason: breakdown § S4 mandates `deleted_at is null` in SELECT for soft-delete tables. A `for all using (auth.uid() = user_id and deleted_at is null)` policy would block soft-deletion itself — the post-update row would fail the USING check when setting deleted_at to non-null. The split mirrors `accounts`'s 4-policy pattern with the filter only on SELECT. Names: `users see own trades`, `users insert own trades`, `users update own trades`, `users delete own trades`.
+
+### 2. `trade_screenshots` does NOT have `deleted_at is null` filter
+
+Reason: breakdown § S4 lists it as a soft-delete table, but the schema in `data-model.md` does not include a `deleted_at` column on this table. Including the filter would be a SQL error. Cleanup happens via FK cascade when the parent trade is hard-deleted.
 
 ---
 
 ## Important rules carried forward
 
-From the previous handoff — these are still in effect:
-
 > **Claude Code rule:** When the next session to run is 🟢 Light, do NOT execute it. Instead, print the session's "Prompt to paste" block verbatim and tell the user to run it in their local Ollama model. Then stop. Only pick up again when the user confirms the Light session is done.
 
-S5 and S7 are the upcoming 🟢 Light sessions — those get handed to Ollama.
+**Next up is S5 (🟢 Light).** When the user is ready to proceed, paste the S5 prompt from `docs/tasks/02-breakdown.md` § S5 verbatim, then stop. Do not execute it from Claude Code.
 
 ---
 
 ## Gotchas discovered this session
 
-1. **Migration columns differ from data-model.md naming** — when running manual verification SQL, note that the `accounts` table uses `account_type_id` (not `prop_firm_account_type_id`) and has no `broker_account_id` column. Source of truth is the actual S2 migration file or `\d public.accounts` in psql, not memory.
+1. **`docker exec` heredoc piping does not work on Windows** — `docker exec ... <<EOF` swallows the script. Workaround: write the SQL to a file in the host repo, then either `docker cp` it to the container OR `cat file.sql | docker exec -i ... psql ...`. The second is simpler and was used for the RLS adversarial test.
 
-2. **`drop trigger if exists` produces NOTICE lines on a fresh DB** — that's fine. They prove the migration is re-runnable; on an empty DB the drops are no-ops.
+2. **`set local request.jwt.claims to '{"sub":"<uuid>"}'`** is the way to simulate an authenticated user in psql. `auth.uid()` reads from this. Use `set local role authenticated` (or `anon`) first to switch the session role to the one RLS policies are scoped to.
 
-3. **`security definer` triggers need `set search_path = public`** — added to `tg_create_profile` defensively so the trigger cannot be exploited by a malicious search_path. The data-model spec didn't require it but it's a Postgres-trigger best practice.
+3. **`for all using (...)` with no `with check`** — Postgres uses the USING expression as the WITH CHECK for INSERT/UPDATE. This is the secure default, but for explicit safety the migration adds `with check (auth.uid() = user_id)` on every `for all` policy to prevent user_id rewrites on update.
+
+4. **Soft-delete via RLS has a recovery friction point** — with `deleted_at is null` in the SELECT policy, the owner can't see their deleted rows. To recover, they need either an admin/service-role pathway to surface them, or an app-level "show deleted" view bypassed via direct ID lookup (UPDATE still works without the deleted_at filter). This is a known UX consideration for future sessions.
 
 ---
 
-## Next step: S4 (yours to run — 🔴 Heavy)
+## Next step: S5 (🟢 Light — Ollama)
 
-**Wait for PR #29 to merge into `main` first.** Then run **S4 — Migration 3: RLS policies**.
+**Wait for PR #30 to merge into `main` first.** Then run **S5 — Migrations 4 + 5: realtime + indexes**.
 
-The S4 prompt is in `docs/tasks/02-breakdown.md` § S4. Summary of what it does:
+This is a 🟢 Light tier session. Per the rules above, Claude Code should NOT execute this. Instead:
 
-- Create `packages/db/supabase/migrations/20260101000003_rls_policies.sql`
-- `alter table ... enable row level security;` on every one of the 12 public tables
-- Create the policies specified in `docs/architecture/data-model.md` § RLS Policies
-- Public reference tables (`prop_firms`, `prop_firm_account_types`, `economic_events`) → `for select using (true)`
-- User-owned tables → `auth.uid() = user_id` (note `profiles` keyed on `id`, not `user_id` — read the schema)
-- Soft-delete tables (`accounts`, `trades`, `trade_screenshots`) need `deleted_at is null` on SELECT policy
-- Output a markdown cross-check table mapping each table to its policies and audit against `data-model.md` line by line before reporting done
+1. Print the S5 prompt from `docs/tasks/02-breakdown.md` § S5 verbatim
+2. Tell the user to paste it into their local Ollama model
+3. Stop and wait for user confirmation that S5 is done
 
-**S4 is the most security-critical migration in the entire codebase.** A missing policy = data leak. The cross-check step is non-negotiable.
-
-After S4 merges, the Studio security advisor warning count should drop from 37 to 0.
+S5 creates two short migration files:
+- `20260101000004_realtime.sql` — adds `accounts` and `trades` to the realtime publication (2 lines)
+- `20260101000005_indexes.sql` — copies the `create [unique] index` statements from `data-model.md` (4 indexes)
 
 ---
 
@@ -118,13 +141,12 @@ After S4 merges, the Studio security advisor warning count should drop from 37 t
 
 | Session | Tier | Who runs it |
 |---------|------|-------------|
-| S4 | 🔴 Heavy | Claude Code (you) |
 | S5 | 🟢 Light | **Ollama** — print prompt, stop, wait for user |
 | S6 | 🟣 User | User verifies in Supabase Studio UI |
 | S7 | 🟢 Light | **Ollama** — print prompt, stop, wait for user |
 | S8 | 🟡 Medium | Claude Code (you) |
 | S9 | 🔴 Heavy | Claude Code (you) — needs web access for prop firm research |
-| S10 | 🔴 Heavy | Claude Code (you) |
+| S10 | 🔴 Heavy | Claude Code (you) — exhaustive RLS test suite |
 | S11 | 🟡 Medium | Claude Code (you) |
 | S12 | 🟡 Medium | Claude Code (you) |
 | S13 | 🟣 User | User applies to production Supabase |
