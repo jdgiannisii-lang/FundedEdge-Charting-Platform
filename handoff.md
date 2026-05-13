@@ -1,8 +1,8 @@
 # Session Handoff
 
-**Branch:** `claude/epic-carson-58v70`
+**Branch:** `feat/02-s3-triggers` (PR #29 — in review)
 **Date written:** 2026-05-13
-**Written by:** Claude Sonnet 4.6 (session_011NJw2L4Ykx8JE9Vg2USf7o)
+**Written by:** Claude Sonnet 4.6
 
 ---
 
@@ -30,87 +30,94 @@ In this order:
 
 ### Session status (from `docs/tasks/02-breakdown.md` § 6)
 
-| Session | Status | Notes |
-|---------|--------|-------|
-| S0 — Supabase project + CLI | 🟡 In progress | User is doing this now (creating project on supabase.com, installing CLI on Windows, verifying Docker). Come back when user confirms `supabase --version` and `docker ps` both work. |
-| S1 — Scaffold `packages/db` | 🟢 Done | All files created, `supabase init` run, typecheck passes, committed + pushed |
-| S2–S13 | 🔴 Not started | — |
+| Session | Status | PR | Notes |
+|---------|--------|----|-------|
+| S0 — Supabase project + CLI | 🟢 Done | — | Project `fundededge-prod` provisioned, CLI v2.98.2, Docker verified |
+| S1 — Scaffold `packages/db` | 🟢 Done | #27 | Files created, `supabase init` run, typecheck passes |
+| S2 — Migration 1 (schema) | 🟢 Done | #28 | 12 public tables, applies cleanly on fresh local DB |
+| S3 — Migration 2 (triggers) | 🔵 In review | #29 | Three triggers verified locally; awaiting CI + merge |
+| S4 — Migration 3 (RLS) | 🔴 Not started | — | — |
+| S5–S13 | 🔴 Not started | — | — |
 
 ### What exists in `packages/db` right now
 
 ```
 packages/db/
-├── .gitignore                        # ignores supabase/.branches, .temp, .env
-├── MIGRATIONS.md                     # placeholder — filled in S12
-├── package.json                      # full scripts + deps (@supabase/ssr, supabase CLI, vitest)
-├── tsconfig.json                     # extends base, excludes supabase/
+├── .gitignore
+├── MIGRATIONS.md                                  # placeholder — filled in S12
+├── package.json                                   # full scripts + deps
+├── tsconfig.json
 ├── src/
-│   ├── index.ts                      # empty `export {}` stub — filled in S8
+│   ├── index.ts                                   # empty stub — filled in S8
 │   └── generated/
-│       └── .gitkeep                  # types.ts written here in S7
+│       └── .gitkeep                               # types.ts written here in S7
 └── supabase/
-    ├── .gitignore                    # created by supabase init
-    ├── config.toml                   # created by supabase init
+    ├── .gitignore
+    ├── config.toml
     └── migrations/
-        └── .gitkeep                  # empty — migrations written in S2–S5
+        ├── 20260101000001_initial_schema.sql     # S2 — 12 tables
+        └── 20260101000002_triggers.sql           # S3 — 3 trigger functions
 ```
 
-### Root-level changes made this session
+### S3 verification results (already passed locally)
 
-- `.gitignore` — added `*.tsbuildinfo` (TypeScript build artifacts were showing as untracked)
-- `package.json` — added `"pnpm": { "onlyBuiltDependencies": [..., "supabase"] }` so the Supabase CLI binary downloads automatically on `pnpm install`
+All four spec-mandated trigger tests confirmed:
+
+| Trigger | Test | Result |
+|---|---|---|
+| `tg_create_profile` | Insert into `auth.users` | ✅ 1 profile + 1 user_preferences row |
+| `tg_update_highest_balance` (up) | current 50k → 52k | ✅ highest jumped to 52000 |
+| `tg_update_highest_balance` (down) | current 52k → 49k | ✅ highest stayed at 52000 |
+| `tg_set_updated_at` | Update profile | ✅ updated_at advanced |
+
+Plus `supabase db reset` applied both migrations with zero errors.
 
 ---
 
-## Important rule added this session
+## Important rules carried forward
 
-In `docs/tasks/02-breakdown.md` § 0 (Glossary of tiers), we added:
+From the previous handoff — these are still in effect:
 
 > **Claude Code rule:** When the next session to run is 🟢 Light, do NOT execute it. Instead, print the session's "Prompt to paste" block verbatim and tell the user to run it in their local Ollama model. Then stop. Only pick up again when the user confirms the Light session is done.
 
-**Enforce this.** The user wants to save Claude Code credits for Medium/Heavy sessions only. Light sessions (S5, S7) must be handed to Ollama.
+S5 and S7 are the upcoming 🟢 Light sessions — those get handed to Ollama.
 
 ---
 
-## What failed / gotchas discovered
+## Gotchas discovered this session
 
-1. **`pnpm install` silently skipped the Supabase CLI binary download** — pnpm blocks postinstall scripts by default. Fixed by adding `supabase` to `pnpm.onlyBuiltDependencies` in root `package.json`. Without this, `supabase` installs as a package but the binary doesn't exist.
+1. **Migration columns differ from data-model.md naming** — when running manual verification SQL, note that the `accounts` table uses `account_type_id` (not `prop_firm_account_type_id`) and has no `broker_account_id` column. Source of truth is the actual S2 migration file or `\d public.accounts` in psql, not memory.
 
-2. **`supabase init` does not create a `migrations/` directory** — the spec says it does but it only creates `config.toml`. Created `supabase/migrations/.gitkeep` manually.
+2. **`drop trigger if exists` produces NOTICE lines on a fresh DB** — that's fine. They prove the migration is re-runnable; on an empty DB the drops are no-ops.
 
-3. **Commit message hook enforces lowercase subject** — `feat(db): S1 — scaffold...` failed commitlint because "S1" is considered sentence-case. Must use fully lowercase subjects like `feat(db): scaffold packages/db skeleton (s1)`.
-
-4. **`supabase start` requires Docker running** — do not run `supabase start` until S6. The CLI is installed and `supabase init` is done, but the local DB stack hasn't been started yet. That's intentional per the spec.
+3. **`security definer` triggers need `set search_path = public`** — added to `tg_create_profile` defensively so the trigger cannot be exploited by a malicious search_path. The data-model spec didn't require it but it's a Postgres-trigger best practice.
 
 ---
 
-## Next step: S2 (yours to run — 🔴 Heavy)
+## Next step: S4 (yours to run — 🔴 Heavy)
 
-**Wait for user to confirm S0 is done first** (they're installing CLI + creating Supabase project on supabase.com right now).
+**Wait for PR #29 to merge into `main` first.** Then run **S4 — Migration 3: RLS policies**.
 
-Once S0 is confirmed, run **S2 — Migration 1: initial schema**.
+The S4 prompt is in `docs/tasks/02-breakdown.md` § S4. Summary of what it does:
 
-The S2 prompt is in `docs/tasks/02-breakdown.md` § S2. Summary of what it does:
+- Create `packages/db/supabase/migrations/20260101000003_rls_policies.sql`
+- `alter table ... enable row level security;` on every one of the 12 public tables
+- Create the policies specified in `docs/architecture/data-model.md` § RLS Policies
+- Public reference tables (`prop_firms`, `prop_firm_account_types`, `economic_events`) → `for select using (true)`
+- User-owned tables → `auth.uid() = user_id` (note `profiles` keyed on `id`, not `user_id` — read the schema)
+- Soft-delete tables (`accounts`, `trades`, `trade_screenshots`) need `deleted_at is null` on SELECT policy
+- Output a markdown cross-check table mapping each table to its policies and audit against `data-model.md` line by line before reporting done
 
-- Create `packages/db/supabase/migrations/20260101000001_initial_schema.sql`
-- Include `CREATE TABLE` for every table in `docs/architecture/data-model.md` § Tables: `profiles`, `prop_firms`, `prop_firm_account_types`, `accounts`, `trades`, `trade_screenshots`, `checklists`, `checklist_items`, `checklist_runs`, `chart_layouts`, `user_preferences`, `economic_events`
-- Enable `citext` extension at top of file (needed for `profiles.email`)
-- **Do NOT include** triggers, RLS, realtime publication, or non-inline indexes — those are S3, S4, S5
-- **Do NOT include** `subscriptions` table — deferred to v1.x
-- Verify with `supabase db reset` (requires Docker + `supabase start`)
+**S4 is the most security-critical migration in the entire codebase.** A missing policy = data leak. The cross-check step is non-negotiable.
 
-Read `docs/architecture/data-model.md` carefully before writing any SQL — every column type, constraint, and FK is specified there. If anything is ambiguous, stop and ask the user rather than guessing.
-
-**S2 depends on `supabase start` working locally**, which requires Docker running and the Supabase project created (S0). Do not attempt S2 until the user confirms S0.
+After S4 merges, the Studio security advisor warning count should drop from 37 to 0.
 
 ---
 
-## Tier reminder for upcoming sessions
+## Tier reminder for remaining sessions
 
 | Session | Tier | Who runs it |
 |---------|------|-------------|
-| S2 | 🔴 Heavy | Claude Code (you) |
-| S3 | 🟡 Medium | Claude Code (you) |
 | S4 | 🔴 Heavy | Claude Code (you) |
 | S5 | 🟢 Light | **Ollama** — print prompt, stop, wait for user |
 | S6 | 🟣 User | User verifies in Supabase Studio UI |
