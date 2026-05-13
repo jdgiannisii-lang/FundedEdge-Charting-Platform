@@ -918,10 +918,10 @@ Update this table as each session completes.
 
 | # | Session | Status | PR | Notes |
 |---|---------|--------|----|-------|
-| S0 | Supabase project + CLI | 🟡 In progress | — | Docker installed, CLI installed via pnpm; remote Supabase project still needs creation by user |
-| S1 | Scaffold `packages/db` | 🟢 Done | — | All files created, supabase init run, typecheck passes |
-| S2 | Migration 1 (schema) | 🔵 In review | — | Migration written, applies cleanly against a fresh Postgres 16 with auth.users stub. 12 public tables, citext extension, 44 constraints verified column-by-column against data-model.md. User must re-run `supabase db reset` locally before S3. |
-| S3 | Migration 2 (triggers) | 🔴 Not started | — | |
+| S0 | Supabase project + CLI | 🟢 Done | — | Supabase project `fundededge-prod` provisioned on supabase.com, CLI v2.98.2 installed, Docker Desktop verified |
+| S1 | Scaffold `packages/db` | 🟢 Done | #27 | All files created, supabase init run, typecheck passes |
+| S2 | Migration 1 (schema) | 🟢 Done | #28 | Migration applies cleanly on fresh local DB; user verified `supabase db reset` end-to-end |
+| S3 | Migration 2 (triggers) | 🔵 In review | #29 | Three trigger functions implemented and verified locally: auth->profile insert, highest_balance monotonic, updated_at advances on update |
 | S4 | Migration 3 (RLS) | 🔴 Not started | — | |
 | S5 | Migrations 4 + 5 | 🔴 Not started | — | |
 | S6 | Local smoke test | 🔴 Not started | — | |
