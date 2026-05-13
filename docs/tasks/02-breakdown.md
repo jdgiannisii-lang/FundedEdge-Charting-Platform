@@ -920,7 +920,7 @@ Update this table as each session completes.
 |---|---------|--------|----|-------|
 | S0 | Supabase project + CLI | 🟡 In progress | — | Docker installed, CLI installed via pnpm; remote Supabase project still needs creation by user |
 | S1 | Scaffold `packages/db` | 🟢 Done | — | All files created, supabase init run, typecheck passes |
-| S2 | Migration 1 (schema) | 🔴 Not started | — | |
+| S2 | Migration 1 (schema) | 🟢 Done | — | `20260101000001_initial_schema.sql` written; applied cleanly on a fresh Postgres 16 DB (12 tables, 32 constraints, no RLS/triggers/non-inline indexes — all deferred per scope). `supabase db reset` verification deferred to S6 because Supabase CLI/Docker stack is not present in this dev environment. |
 | S3 | Migration 2 (triggers) | 🔴 Not started | — | |
 | S4 | Migration 3 (RLS) | 🔴 Not started | — | |
 | S5 | Migrations 4 + 5 | 🔴 Not started | — | |
