@@ -920,7 +920,7 @@ Update this table as each session completes.
 |---|---------|--------|----|-------|
 | S0 | Supabase project + CLI | 🟡 In progress | — | Docker installed, CLI installed via pnpm; remote Supabase project still needs creation by user |
 | S1 | Scaffold `packages/db` | 🟢 Done | — | All files created, supabase init run, typecheck passes |
-| S2 | Migration 1 (schema) | 🔴 Not started | — | |
+| S2 | Migration 1 (schema) | 🔵 In review | — | Migration written, applies cleanly against a fresh Postgres 16 with auth.users stub. 12 public tables, citext extension, 44 constraints verified column-by-column against data-model.md. User must re-run `supabase db reset` locally before S3. |
 | S3 | Migration 2 (triggers) | 🔴 Not started | — | |
 | S4 | Migration 3 (RLS) | 🔴 Not started | — | |
 | S5 | Migrations 4 + 5 | 🔴 Not started | — | |
