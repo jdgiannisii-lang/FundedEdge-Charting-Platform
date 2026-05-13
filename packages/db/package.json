@@ -10,10 +10,26 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint ./src",
     "lint:fix": "biome lint --write ./src",
-    "clean": "rm -rf dist .turbo"
+    "test:unit": "vitest run --passWithNoTests",
+    "test:unit:watch": "vitest",
+    "clean": "rm -rf dist .turbo",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:reset": "supabase db reset",
+    "supabase:status": "supabase status",
+    "gen:types": "supabase gen types typescript --local > src/generated/types.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.0",
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "peerDependencies": {
+    "next": ">=15.0.0"
   },
   "devDependencies": {
     "@fundededge/config": "workspace:*",
-    "typescript": "^5.6.0"
+    "supabase": "^2.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
   }
 }

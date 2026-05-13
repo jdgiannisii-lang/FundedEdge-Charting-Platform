@@ -17,6 +17,8 @@
 
 **Rule of thumb:** if getting it wrong silently lets one user read another user's data, it's 🔴 Heavy.
 
+**Claude Code rule:** When the next session to run is 🟢 Light, do NOT execute it. Instead, print the session's "Prompt to paste" block verbatim and tell the user to run it in their local Ollama model. Then stop. Only pick up again when the user confirms the Light session is done.
+
 ---
 
 ## 1. Dependency graph
@@ -916,8 +918,8 @@ Update this table as each session completes.
 
 | # | Session | Status | PR | Notes |
 |---|---------|--------|----|-------|
-| S0 | Supabase project + CLI | 🔴 Not started | — | |
-| S1 | Scaffold `packages/db` | 🔴 Not started | — | |
+| S0 | Supabase project + CLI | 🟡 In progress | — | Docker installed, CLI installed via pnpm; remote Supabase project still needs creation by user |
+| S1 | Scaffold `packages/db` | 🟢 Done | — | All files created, supabase init run, typecheck passes |
 | S2 | Migration 1 (schema) | 🔴 Not started | — | |
 | S3 | Migration 2 (triggers) | 🔴 Not started | — | |
 | S4 | Migration 3 (RLS) | 🔴 Not started | — | |
