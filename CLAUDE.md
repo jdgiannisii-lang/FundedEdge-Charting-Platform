@@ -155,7 +155,7 @@ This is the live status of every major component. Update it in the same PR as th
 | ID | Component | Location | Status | Depends On | Spec |
 |---|---|---|---|---|---|
 | 01 | Monorepo Bootstrap | repo root | 🟢 Done | — | `docs/tasks/01-monorepo-bootstrap.md` |
-| 02 | Supabase Schema + RLS | `packages/db` | 🔴 Not started | 01 | `docs/tasks/02-supabase-schema.md` |
+| 02 | Supabase Schema + RLS | `packages/db` | 🟡 In progress | 01 | `docs/tasks/02-supabase-schema.md` |
 | 03 | Auth System | `apps/web/src/auth` | 🔴 Not started | 01, 02 | `docs/tasks/03-auth-system.md` |
 | 04 | App Shell (3-panel layout) | `apps/web/src/app/(app)` | 🔴 Not started | 01, 03 | `docs/tasks/04-app-shell.md` |
 | 05 | Rules Engine | `packages/rules-engine` | 🔴 Not started | 01 | `docs/tasks/05-rules-engine.md` |

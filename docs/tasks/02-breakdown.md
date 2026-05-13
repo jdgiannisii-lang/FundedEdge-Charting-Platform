@@ -9,7 +9,7 @@
 ## 0. Glossary of tiers
 
 | Tier | Who runs it | Use for |
-|------|-------------|---------|
+|------|-------------|--------|
 | 🟣 **User** | You, in a browser / terminal | Account creation, secret handling, anything that can't be code-reviewed |
 | 🟢 **Light** | Local model (Ollama: `qwen2.5-coder:14b`, `deepseek-coder-v2`, or cloud `nemotron-3-super`) via OpenCode | Mechanical scaffolding, file creation from exact templates, running CLI commands. No architecture, no security code. |
 | 🟡 **Medium** | Claude Sonnet 4.6 in Claude Code | Code with judgment but not novel design: client wrappers, docs, CI wiring, test scaffolds. |
@@ -56,7 +56,7 @@ Each session marks **🟢 Done** in the table at the bottom of this file when it
 ## 2. Session index
 
 | # | Title | Tier | Est. time | Depends on |
-|---|-------|------|-----------|-----------|
+|---|-------|------|-----------|----------|
 | S0 | Supabase project + CLI bootstrap | 🟣 You | 15 min | — |
 | S1 | Scaffold `packages/db` skeleton | 🟢 Light | 20 min | S0 |
 | S2 | Migration 1 — initial schema (tables) | 🔴 Heavy | 45 min | S1 |
@@ -870,7 +870,7 @@ git push
 For BOTH Vercel projects (`fundededge-web` and `fundededge-marketing`), go to **Project Settings → Environment Variables** and add:
 
 | Name | Value | Environments |
-|------|-------|--------------|
+|------|-------|------|
 | `NEXT_PUBLIC_SUPABASE_URL` | (from S0 credentials) | Production, Preview, Development |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | (from S0 credentials) | Production, Preview, Development |
 | `SUPABASE_SERVICE_ROLE_KEY` | (from S0 credentials) | Production, Preview *only* — never Development |
@@ -922,7 +922,7 @@ Update this table as each session completes.
 | S1 | Scaffold `packages/db` | 🟢 Done | #27 | All files created, supabase init run, typecheck passes |
 | S2 | Migration 1 (schema) | 🟢 Done | #28 | Migration applies cleanly on fresh local DB; user verified `supabase db reset` end-to-end |
 | S3 | Migration 2 (triggers) | 🟢 Done | #29 | Three trigger functions implemented and verified locally; merged |
-| S4 | Migration 3 (RLS) | 🔵 In review | #30 | RLS enabled on all 12 public tables, 19 policies created. 10 adversarial tests pass: cross-user select/insert/update/delete blocked, anon writes blocked, soft-deleted rows hidden. Two intentional deviations from data-model.md documented in PR (trades 4-policy split; trade_screenshots has no deleted_at column). |
+| S4 | Migration 3 (RLS) | 🟢 Done | #30 | RLS enabled on all 12 public tables, 19 policies created. 10 adversarial tests pass: cross-user select/insert/update/delete blocked, anon writes blocked, soft-deleted rows hidden. Two intentional deviations from data-model.md documented in PR (trades 4-policy split; trade_screenshots has no deleted_at column). Merged 2026-05-13. |
 | S5 | Migrations 4 + 5 | 🔴 Not started | — | |
 | S6 | Local smoke test | 🔴 Not started | — | |
 | S7 | Type generation | 🔴 Not started | — | |
