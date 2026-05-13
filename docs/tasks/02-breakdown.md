@@ -17,6 +17,8 @@
 
 **Rule of thumb:** if getting it wrong silently lets one user read another user's data, it's 🔴 Heavy.
 
+**Claude Code rule:** When the next session to run is 🟢 Light, do NOT execute it. Instead, print the session's "Prompt to paste" block verbatim and tell the user to run it in their local Ollama model. Then stop. Only pick up again when the user confirms the Light session is done.
+
 ---
 
 ## 1. Dependency graph
