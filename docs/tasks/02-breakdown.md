@@ -921,8 +921,8 @@ Update this table as each session completes.
 | S0 | Supabase project + CLI | 🟢 Done | — | Supabase project `fundededge-prod` provisioned on supabase.com, CLI v2.98.2 installed, Docker Desktop verified |
 | S1 | Scaffold `packages/db` | 🟢 Done | #27 | All files created, supabase init run, typecheck passes |
 | S2 | Migration 1 (schema) | 🟢 Done | #28 | Migration applies cleanly on fresh local DB; user verified `supabase db reset` end-to-end |
-| S3 | Migration 2 (triggers) | 🔵 In review | #29 | Three trigger functions implemented and verified locally: auth->profile insert, highest_balance monotonic, updated_at advances on update |
-| S4 | Migration 3 (RLS) | 🔴 Not started | — | |
+| S3 | Migration 2 (triggers) | 🟢 Done | #29 | Three trigger functions implemented and verified locally; merged |
+| S4 | Migration 3 (RLS) | 🔵 In review | #30 | RLS enabled on all 12 public tables, 19 policies created. 10 adversarial tests pass: cross-user select/insert/update/delete blocked, anon writes blocked, soft-deleted rows hidden. Two intentional deviations from data-model.md documented in PR (trades 4-policy split; trade_screenshots has no deleted_at column). |
 | S5 | Migrations 4 + 5 | 🔴 Not started | — | |
 | S6 | Local smoke test | 🔴 Not started | — | |
 | S7 | Type generation | 🔴 Not started | — | |
