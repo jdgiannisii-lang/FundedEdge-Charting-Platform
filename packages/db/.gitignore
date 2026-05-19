@@ -1,3 +1,4 @@
 supabase/.branches
 supabase/.temp
 supabase/.env
+.env.test.local
