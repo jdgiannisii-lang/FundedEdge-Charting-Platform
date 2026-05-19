@@ -1,3 +1,4 @@
-// Re-exports the public API of @fundededge/db.
-// Populated in S8 once client wrappers exist.
-export {};
+export { createBrowserClient } from './client/browser'
+export { createServerClient } from './client/server'
+export { createServiceClient } from './client/service'
+export type { Database } from './generated/types'
