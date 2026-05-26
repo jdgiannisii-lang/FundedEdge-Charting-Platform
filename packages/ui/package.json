@@ -22,7 +22,7 @@
     "@fundededge/config": "workspace:*",
     "@storybook/addon-essentials": "^8",
     "@storybook/react": "^10.4.1",
-    "@storybook/react-vite": "^8.6.18",
+    "@storybook/react-vite": "^10.4.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.0.0",
     "react": "^19.2.6",
