@@ -14,19 +14,19 @@ Each component of FundedEdge is specified as an independently buildable task. A 
 
 ## Task index
 
-| ID | Task | File |
-|---|---|---|
-| 01 | Monorepo Bootstrap | `01-monorepo-bootstrap.md` |
-| 02 | Supabase Schema + RLS | `02-supabase-schema.md` |
-| 03 | Auth System | `03-auth-system.md` |
-| 04 | App Shell | `04-app-shell.md` |
-| 05 | Rules Engine | `05-rules-engine.md` |
-| 06 | Account Management | `06-account-management.md` |
-| 07 | Prop Dashboard Panel | `07-prop-dashboard.md` |
-| 08 | Chart Container | `08-chart-container.md` |
-| 09 | Pre-Trade Checklist | `09-checklist-system.md` |
-| 10 | Economic Calendar | `10-economic-calendar.md` |
-| 11 | Marketing Site | `11-marketing-site.md` |
+| ID | Task | File | Breakdown |
+|---|---|---|---|
+| 01 | Monorepo Bootstrap | `01-monorepo-bootstrap.md` | — |
+| 02 | Supabase Schema + RLS | `02-supabase-schema.md` | `02-breakdown.md` |
+| 03 | Auth System | `03-auth-system.md` | `03-breakdown.md` |
+| 04 | App Shell | `04-app-shell.md` | — |
+| 05 | Rules Engine | `05-rules-engine.md` | — |
+| 06 | Account Management | `06-account-management.md` | — |
+| 07 | Prop Dashboard Panel | `07-prop-dashboard.md` | — |
+| 08 | Chart Container | `08-chart-container.md` | — |
+| 09 | Pre-Trade Checklist | `09-checklist-system.md` | — |
+| 10 | Economic Calendar | `10-economic-calendar.md` | — |
+| 11 | Marketing Site | `11-marketing-site.md` | — |
 
 ## Task file structure
 
