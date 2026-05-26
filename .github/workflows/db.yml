@@ -1,0 +1,41 @@
+name: DB Tests
+
+on:
+  pull_request: {}
+
+jobs:
+  rls-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase local stack
+        working-directory: packages/db
+        run: supabase start
+
+      - name: Export local Supabase credentials
+        working-directory: packages/db
+        run: supabase status -o env >> $GITHUB_ENV
+
+      - name: Run RLS test suite
+        run: pnpm --filter @fundededge/db test:unit
+        env:
+          TEST_SUPABASE_URL: http://127.0.0.1:54321
+          TEST_SUPABASE_ANON_KEY: ${{ env.ANON_KEY }}
+          TEST_SUPABASE_SERVICE_KEY: ${{ env.SERVICE_ROLE_KEY }}
