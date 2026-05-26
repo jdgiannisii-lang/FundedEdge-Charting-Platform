@@ -21,6 +21,9 @@ test-results
 .env.*.local
 !.env.example
 
+# Agentic OS local state (runs log, derived state, generated dashboard)
+.agenticos
+
 # Misc
 .DS_Store
 *.tgz

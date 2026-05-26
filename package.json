@@ -16,6 +16,7 @@
     "test:e2e": "turbo test:e2e",
     "storybook": "turbo storybook",
     "format": "biome format --write .",
+    "agenticos": "node scripts/agenticos/cli.mjs",
     "clean": "turbo clean && rm -rf node_modules",
     "prepare": "husky"
   },
