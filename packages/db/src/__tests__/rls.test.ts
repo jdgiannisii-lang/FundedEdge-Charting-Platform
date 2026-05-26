@@ -44,11 +44,14 @@ if (
 // ---------------------------------------------------------------------------
 // Shared clients
 // ---------------------------------------------------------------------------
-const svc = createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+// supabase-js ≥2.105.4 throws at construction if the key is an empty string,
+// which breaks the module-level skip guard. Use a placeholder so the module
+// loads; tests are still skipped via HAS_CREDS when credentials are absent.
+const svc = createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_KEY || 'placeholder', {
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
-const anon = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+const anon = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY || 'placeholder', {
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
@@ -110,6 +113,7 @@ let aTradeId: string
 let aChecklistId: string
 
 beforeAll(async () => {
+  if (!HAS_CREDS) return
   A = await makeUser('a')
   B = await makeUser('b')
 
