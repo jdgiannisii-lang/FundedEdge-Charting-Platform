@@ -184,6 +184,11 @@ Conventional Commits format. Examples:
 - `fix(prop-dashboard): correct daily loss display when timezone is UTC`
 - `docs(architecture): add ADR for chart datafeed protocol`
 
+### Status and sync updates
+**Never commit status/sync changes in a worktree.** Updates to `docs/tasks/*` session tables, `handoff.md`, and the CLAUDE.md component registry must be committed directly to the current working branch (or included in the feature PR itself). Worktrees create isolated branches that expire without merging — the update silently disappears.
+
+Rule: if the only files changing in a commit are `docs/`, `handoff.md`, or `CLAUDE.md`, that commit must happen on a branch that will be pushed and merged, not in an `EnterWorktree` session.
+
 ### PR checklist
 Every PR must:
 1. Reference its task file (`Closes docs/tasks/05-rules-engine.md`)
