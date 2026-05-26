@@ -923,14 +923,14 @@ Update this table as each session completes.
 | S2 | Migration 1 (schema) | 🟢 Done | #28 | Migration applies cleanly on fresh local DB; user verified `supabase db reset` end-to-end |
 | S3 | Migration 2 (triggers) | 🟢 Done | #29 | Three trigger functions implemented and verified locally; merged |
 | S4 | Migration 3 (RLS) | 🟢 Done | #30 | RLS enabled on all 12 public tables, 19 policies created. 10 adversarial tests pass: cross-user select/insert/update/delete blocked, anon writes blocked, soft-deleted rows hidden. Two intentional deviations from data-model.md documented in PR (trades 4-policy split; trade_screenshots has no deleted_at column). Merged 2026-05-13. |
-| S5 | Migrations 4 + 5 | 🔴 Not started | — | |
-| S6 | Local smoke test | 🔴 Not started | — | |
-| S7 | Type generation | 🔴 Not started | — | |
-| S8 | Client wrappers | 🔴 Not started | — | |
-| S9 | Seed data | 🔴 Not started | — | |
-| S10 | RLS tests | 🔴 Not started | — | |
-| S11 | CI wiring | 🔴 Not started | — | |
-| S12 | Docs + registry | 🔴 Not started | — | |
+| S5 | Migrations 4 + 5 | 🟢 Done | #33 | Realtime publication (accounts + trades) + 4 performance indexes. Merged 2026-05-14. |
+| S6 | Local smoke test | 🟢 Done | — | All 12 tables verified in Supabase Studio; trigger tests (profile creation, highest_balance) confirmed working. |
+| S7 | Type generation | 🟢 Done | #39 | Types generated from local schema, covers all 12 tables. Merged 2026-05-19. |
+| S8 | Client wrappers | 🟢 Done | #40 | Browser, server, service-role clients typed with Database. React v19 react-dom alignment fix included. Merged 2026-05-19. |
+| S9 | Seed data | 🟢 Done | #41 | 4 prop firms (Apex, TPT, Tradeify, Lucid), 29 account types with citations. Last verified 2026-05-19. Merged 2026-05-19. |
+| S10 | RLS tests | 🟢 Done | #42 | 57 integration tests; all policies + triggers verified; deliberate-bug check passed. Merged 2026-05-19. |
+| S11 | CI wiring | 🟢 Done | — | `.github/workflows/db.yml` committed. PR-triggered, 15-min timeout, supabase/setup-cli@v1. |
+| S12 | Docs + registry | 🟢 Done | — | `packages/db/MIGRATIONS.md` written; CLAUDE.md registry updated to 🟢 Done |
 | S13 | Apply to prod | 🔴 Not started | — | |
 
 ---

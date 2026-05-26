@@ -1,8 +1,8 @@
 # Session Handoff
 
-**Branch:** `main` (S10 complete — merged 2026-05-19 via PR #42)
-**Date written:** 2026-05-22
-**Written by:** FundedEdge sync agent (automated)
+**Branch:** `main` (S12 complete — docs + registry updated 2026-05-26)
+**Date written:** 2026-05-26
+**Written by:** FundedEdge sync agent (manual correction)
 
 ---
 
@@ -44,14 +44,14 @@ In this order:
 | S8 — Supabase client wrappers | 🟢 Done | #40 | 2026-05-19 |
 | S9 — Prop firm seed data | 🟢 Done | #41 | 2026-05-19 |
 | S10 — RLS test suite | 🟢 Done | #42 | 2026-05-19 |
+| S11 — CI wiring | 🟢 Done | — | 2026-05-26 |
+| S12 — Docs + registry | 🟢 Done | — | 2026-05-26 |
 
 ### Remaining sessions
 
 | Session | Tier | Status |
 |---------|------|--------|
-| S11 — CI wiring | 🟡 Medium | 🔴 Not started — **next up** |
-| S12 — Docs + registry | 🟡 Medium | 🔴 Not started |
-| S13 — Apply to production | 🟣 User | 🔴 Not started |
+| S13 — Apply to production | 🟣 User | 🔴 Not started — **next up** |
 
 ### What exists in `packages/db` right now
 
@@ -133,16 +133,11 @@ Reason: `data-model.md` doesn't include a `deleted_at` column on this table. Cle
 
 ---
 
-## Next step: S11 (🟡 Medium — Claude Code executes this)
+## Next step: S13 (🟣 User — you run this)
 
-**Goal:** Create `.github/workflows/db.yml` that:
-- Triggers on PR (not push to main)
-- Uses `supabase/setup-cli` action to spin up Supabase locally in the runner
-- Runs `pnpm --filter @fundededge/db test:unit`
-- Caches Docker layers and pnpm store for speed
-- Has a 15-minute timeout
+**Goal:** Apply schema to production Supabase. Run `supabase db push` against the live project, set Vercel env vars, redeploy.
 
-See `docs/tasks/02-breakdown.md` § S11 for the verbatim prompt to paste.
+See `docs/tasks/02-breakdown.md` § S13 for the full step-by-step.
 
 ---
 
@@ -150,6 +145,4 @@ See `docs/tasks/02-breakdown.md` § S11 for the verbatim prompt to paste.
 
 | Session | Tier | Who runs it |
 |---------|------|-------------|
-| S11 | 🟡 Medium | Claude Code (you) |
-| S12 | 🟡 Medium | Claude Code (you) |
 | S13 | 🟣 User | You — applies schema to production Supabase |
