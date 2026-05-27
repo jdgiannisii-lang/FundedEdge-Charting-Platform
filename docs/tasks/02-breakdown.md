@@ -931,7 +931,7 @@ Update this table as each session completes.
 | S10 | RLS tests | 🟢 Done | #42 | 57 integration tests; all policies + triggers verified; deliberate-bug check passed. Merged 2026-05-19. |
 | S11 | CI wiring | 🟢 Done | — | `.github/workflows/db.yml` committed. PR-triggered, 15-min timeout, supabase/setup-cli@v1. |
 | S12 | Docs + registry | 🟢 Done | — | `packages/db/MIGRATIONS.md` written; CLAUDE.md registry updated to 🟢 Done |
-| S13 | Apply to prod | 🔴 Not started | — | |
+| S13 | Apply to prod | 🟢 Done | — | Schema applied to production Supabase (`xiwypoeveknrackwjghp`) 2026-05-26. 12 tables, 4 prop firms + 29 account types seeded. Vercel env vars set on both projects, redeployed. |
 
 ---
 
