@@ -31,7 +31,7 @@ jobs:
 
       - name: Export local Supabase credentials
         working-directory: packages/db
-        run: supabase status -o env >> $GITHUB_ENV
+        run: supabase status -o env | sed 's/="\(.*\)"$/=\1/' >> $GITHUB_ENV
 
       - name: Run RLS test suite
         run: pnpm --filter @fundededge/db test:unit

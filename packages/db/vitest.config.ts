@@ -21,6 +21,7 @@ export default defineConfig({
     environment: 'node',
     passWithNoTests: true,
     include: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+    setupFiles: ['./vitest.setup.ts'],
     // Inject .env.test.local (gitignored) into process.env before any module loads.
     // Falls back to empty object if file doesn't exist (CI sets vars directly).
     env: loadDotEnv(resolve(__dirname, '.env.test.local')),
