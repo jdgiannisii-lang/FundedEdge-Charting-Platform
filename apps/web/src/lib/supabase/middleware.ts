@@ -5,8 +5,12 @@ import type { Database } from '@fundededge/db'
 export async function updateSession(req: NextRequest) {
   let res = NextResponse.next({ request: req })
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  // No Supabase credentials in this environment (e.g. CI smoke tests).
+  // Skip session refresh and treat every request as unauthenticated.
+  if (!url || !anonKey) return { res, user: null }
 
   const supabase = createServerClient<Database>(
     url,
