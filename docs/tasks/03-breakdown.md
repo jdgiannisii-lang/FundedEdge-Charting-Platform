@@ -28,7 +28,7 @@
 | S2  | Supabase client wrappers (web app layer)      | 🟡 Medium | 🟢 Done        | —   |
 | S3  | Middleware + session refresh                  | 🔴 Heavy  | 🟢 Done        | —   |
 | S4  | Server actions + Zod schemas                  | 🟡 Medium | 🟢 Done        | —   |
-| S5  | Auth UI components                            | 🟡 Medium | 🔴 Not started | —   |
+| S5  | Auth UI components                            | 🟡 Medium | 🟢 Done        | —   |
 | S6  | Auth pages (login, signup, verify, reset)     | 🟡 Medium | 🔴 Not started | —   |
 | S7  | OAuth + magic link callback route             | 🔴 Heavy  | 🔴 Not started | —   |
 | S8  | Playwright E2E test suite                     | 🔴 Heavy  | 🔴 Not started | —   |
