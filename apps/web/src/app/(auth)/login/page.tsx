@@ -9,7 +9,12 @@ import {
 
 export const metadata: Metadata = { title: 'Sign in — FundedEdge' }
 
-export default function LoginPage() {
+interface Props {
+  searchParams: Promise<{ error?: string }>
+}
+
+export default async function LoginPage({ searchParams }: Props) {
+  const { error } = await searchParams
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -21,6 +26,12 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
+
+      {error && (
+        <p className="rounded-md bg-red-950/50 px-3 py-2 text-sm text-red-400" role="alert">
+          {error}
+        </p>
+      )}
 
       <LoginForm
         signInAction={signInAction}
