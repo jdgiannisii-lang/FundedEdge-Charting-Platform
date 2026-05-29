@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { normaliseAuthError } from '@/lib/auth/helpers'
@@ -27,6 +28,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(new URL(next, origin))
   } catch (e) {
+    Sentry.captureException(e)
     return NextResponse.redirect(
       new URL(`/login?error=${encodeURIComponent(normaliseAuthError(e))}`, origin),
     )
