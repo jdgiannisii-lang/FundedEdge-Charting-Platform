@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { EmailOtpType } from '@supabase/supabase-js'
 import { createServerClient } from '@/lib/supabase/server'
@@ -28,6 +29,7 @@ export async function GET(request: NextRequest) {
     const redirectTo = type === 'recovery' ? '/reset-password' : '/app'
     return NextResponse.redirect(new URL(redirectTo, origin))
   } catch (e) {
+    Sentry.captureException(e)
     return NextResponse.redirect(
       new URL(`/login?error=${encodeURIComponent(normaliseAuthError(e))}`, origin),
     )

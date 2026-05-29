@@ -1,9 +1,9 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  experimental: {
-    typedRoutes: true,
-  },
-};
+  typedRoutes: true,
+  // Sentry uses OpenTelemetry internals that must stay external to avoid bundling issues
+  serverExternalPackages: ['@sentry/nextjs', 'import-in-the-middle', 'require-in-the-middle'],
+}
 
-export default nextConfig;
+export default nextConfig
