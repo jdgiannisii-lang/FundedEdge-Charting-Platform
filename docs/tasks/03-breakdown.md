@@ -23,16 +23,17 @@
 
 | #   | Title                                         | Tier      | Status         | PR  |
 | --- | --------------------------------------------- | --------- | -------------- | --- |
-| S0  | Supabase Auth + Resend + OAuth config         | 🟣 User   | 🟢 Done        | —   |
-| S1  | Scaffold auth file skeleton                   | 🟢 Light  | 🟢 Done        | —   |
-| S2  | Supabase client wrappers (web app layer)      | 🟡 Medium | 🟢 Done        | —   |
-| S3  | Middleware + session refresh                  | 🔴 Heavy  | 🟢 Done        | —   |
-| S4  | Server actions + Zod schemas                  | 🟡 Medium | 🟢 Done        | —   |
-| S5  | Auth UI components                            | 🟡 Medium | 🟢 Done        | —   |
-| S6  | Auth pages (login, signup, verify, reset)     | 🟡 Medium | 🔴 Not started | —   |
-| S7  | OAuth + magic link callback route             | 🔴 Heavy  | 🔴 Not started | —   |
-| S8  | Playwright E2E test suite                     | 🔴 Heavy  | 🔴 Not started | —   |
-| S9  | Sentry + PostHog wiring + registry update     | 🟡 Medium | 🔴 Not started | —   |
+| S0       | Supabase Auth + Resend + OAuth config         | 🟣 User   | 🟢 Done | —   |
+| S1       | Scaffold auth file skeleton                   | 🟢 Light  | 🟢 Done | —   |
+| S2       | Supabase client wrappers (web app layer)      | 🟡 Medium | 🟢 Done | —   |
+| S3       | Middleware + session refresh                  | 🔴 Heavy  | 🟢 Done | —   |
+| S4       | Server actions + Zod schemas                  | 🟡 Medium | 🟢 Done | —   |
+| S5       | Auth UI components                            | 🟡 Medium | 🟢 Done | —   |
+| S6       | Auth pages (login, signup, verify, reset)     | 🟡 Medium | 🟢 Done | #57 |
+| S7       | OAuth + magic link callback route             | 🔴 Heavy  | 🟢 Done | #58 |
+| S8       | Playwright E2E test suite                     | 🔴 Heavy  | 🟢 Done | #59 |
+| S9       | Sentry + PostHog wiring + registry update     | 🟡 Medium | 🟢 Done | #59 |
+| followup | Ultrareview #59 fixes (Sentry, PostHog, docs) | 🟡 Medium | 🟢 Done | #60 |
 
 ---
 
