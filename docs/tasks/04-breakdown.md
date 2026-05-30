@@ -925,7 +925,7 @@ Update this table as each session completes.
 | # | Session | Status | PR | Notes |
 |---|---------|--------|----|-------|
 | S0 | Install deps + scaffold stubs | 🟢 Done | #62 | zustand, next-themes, react-resizable-panels, Radix deps; 21 stub files; both typechecks pass |
-| S1 | Design tokens + globals | 🔴 Not started | — | |
+| S1 | Design tokens + globals | 🟢 Done | #63 | 40 color vars, dark/light themes, compact density, .glass, focus ring, reduced-motion |
 | S2 | Zustand stores | 🔴 Not started | — | |
 | S3 | `packages/ui` new components | 🔴 Not started | — | |
 | S4 | Shell components | 🔴 Not started | — | |
