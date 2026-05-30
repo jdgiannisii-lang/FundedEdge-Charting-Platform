@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import { PostHogPageView } from '@/components/posthog-pageview'
 import { PostHogProvider } from '@/components/posthog-provider'
 import './globals.css'
 
@@ -11,7 +13,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <PostHogProvider>{children}</PostHogProvider>
+        <PostHogProvider>
+          {/* Suspense required because PostHogPageView calls useSearchParams() */}
+          <Suspense fallback={null}>
+            <PostHogPageView />
+          </Suspense>
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   )

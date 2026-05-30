@@ -10,9 +10,11 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
     if (!key) return
 
+    // Pageview capture disabled — PostHogPageView handles it manually via
+    // usePathname/useSearchParams so Suspense/streaming don't produce stale $current_url.
     posthog.init(key, {
       api_host: '/ingest',
-      capture_pageview: true,
+      capture_pageview: false,
       capture_pageleave: true,
       persistence: 'localStorage',
     })
@@ -24,9 +26,19 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     if (!url || !anonKey) return
 
     const supabase = createBrowserClient(url, anonKey)
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) posthog.identify(user.id, { email: user.email })
+
+    // Subscribe to auth state changes so identity stays correct across sign-in/out
+    // on the same device. A one-time getUser() at mount mis-attributes events when
+    // users switch accounts without a full page reload.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && session?.user) {
+        posthog.identify(session.user.id, { email: session.user.email })
+      } else if (event === 'SIGNED_OUT') {
+        posthog.reset()
+      }
     })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   return <PHProvider client={posthog}>{children}</PHProvider>
