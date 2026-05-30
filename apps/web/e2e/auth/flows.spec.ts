@@ -1,10 +1,12 @@
 /**
- * Full auth flow tests — require local Supabase + Mailpit.
+ * Full auth flow tests — require local Supabase + Inbucket.
+ *
+ * Supabase CLI bundles Inbucket (not Mailpit) as its email catcher.
+ * The helper below calls the Inbucket REST API (/api/v1/mailbox/…).
  *
  * To run locally:
- *   1. pnpm supabase start
- *   2. Start Mailpit (email inbucket at http://localhost:54324)
- *   3. FULL_AUTH_TESTS=true pnpm test:e2e --project=chromium e2e/auth/flows.spec.ts
+ *   1. pnpm supabase start   (starts Supabase + Inbucket on http://localhost:54324)
+ *   2. FULL_AUTH_TESTS=true pnpm test:e2e --project=chromium e2e/auth/flows.spec.ts
  */
 import { expect, test } from '@playwright/test'
 
@@ -94,10 +96,10 @@ test.describe('Google OAuth (mocked)', () => {
     await page.goto('/login')
     await page.getByRole('button', { name: 'Continue with Google' }).click()
 
-    // With the mock, the callback will attempt to exchange the code. In local Supabase
-    // this will fail because 'mock_oauth_code' is not real — we land on /login with error.
-    // A real test would use a properly-seeded code; this verifies the plumbing only.
-    await expect(page).toHaveURL(/\/(login|app)/)
+    // The mocked authorize endpoint redirects the browser to /auth/callback?code=mock_oauth_code.
+    // Supabase rejects the fake code → callback redirects to /login?error=…
+    // Assert we landed on the error path (proves the redirect chain executed).
+    await expect(page).toHaveURL(/\/login\?error=/)
   })
 })
 
@@ -105,13 +107,21 @@ test.describe('password reset flow', () => {
   test.skip(!FULL_AUTH, 'set FULL_AUTH_TESTS=true with local Supabase + Mailpit running')
 
   test('requests reset, clicks link, sets new password', async ({ page }) => {
+    // Pre-create the account via Supabase admin API so resetPasswordForEmail has a real
+    // user to send to. Without this step Supabase silently no-ops (anti-enumeration) and
+    // the inbucket mailbox stays empty.
     const email = randomEmail()
-    const initialPassword = 'InitialPass1!'
     const newPassword = 'NewPassword2!'
 
-    // First create the account (bypassing verification for simplicity using admin API is
-    // out of scope here — skip if you haven't pre-created the test user)
-    // This test assumes the account already exists.
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://localhost:54321'
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
+    const createRes = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
+      method: 'POST',
+      headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: 'InitialPass1!', email_confirm: true }),
+    })
+    if (!createRes.ok) throw new Error(`Failed to seed test user: ${await createRes.text()}`)
+
     await page.goto('/forgot-password')
     await page.getByLabel('Email').fill(email)
     await page.getByRole('button', { name: 'Send reset link' }).click()

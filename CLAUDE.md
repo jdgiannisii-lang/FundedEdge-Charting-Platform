@@ -236,7 +236,8 @@ All env vars live in `apps/web/.env.local` (gitignored) for local dev and in Ver
 | `FINNHUB_KEY` | legacy | server only | Quote fallback during migration |
 | `TWELVE_DATA_KEY` | legacy | server only | Candle fallback during migration |
 | `RESEND_API_KEY` | yes | server only | Transactional email |
-| `SENTRY_DSN` | prod | both | Error monitoring |
+| `NEXT_PUBLIC_SITE_URL` | yes | server only | Base URL for OAuth callbacks (e.g. https://fundededge.com) |
+| `NEXT_PUBLIC_SENTRY_DSN` | prod | client + server | Error monitoring — public DSN, safe to expose |
 | `NEXT_PUBLIC_POSTHOG_KEY` | prod | client | Product analytics |
 | `STRIPE_SECRET_KEY` | v1.x | server only | Added when monetization launches |
 | `STRIPE_WEBHOOK_SECRET` | v1.x | server only | Stripe webhooks |
