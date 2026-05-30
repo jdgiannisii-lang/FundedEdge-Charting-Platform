@@ -19,9 +19,8 @@ Goal: scaffolding so every component after this can be built without friction.
 | 01 | Monorepo bootstrap (Turborepo, pnpm, Next.js 15 app, packages skeleton, Biome, Vitest, Playwright, Storybook, GitHub Actions CI) | 1–3 |
 | 02 | Supabase schema + RLS + migrations + seed data + types generation | 4–7 |
 | 03 | Auth system (email + magic link + Google OAuth, session management, protected routes) | 8–11 |
-| - | Vercel deployment + preview deploy per PR + custom domain wired | 12 |
+| - | Vercel deployment + preview deploy per PR | 12 |
 | - | Sentry + PostHog + Resend integrated | 13 |
-| - | Brand assets dropped in (when user provides) | 14 |
 
 **Exit criteria for Phase 0:**
 - A user can sign up, log in, log out
@@ -91,7 +90,9 @@ Goal: production-ready.
 
 | Deliverable | Days |
 |---|---|
-| Performance audit — Lighthouse 95+ on all pages, web-vitals green | 76–78 |
+| Custom domain (fundededge.com) wired to Vercel production deployment | 76 |
+| Brand assets — logo, favicon, OG image, colour tokens finalised | 76 |
+| Performance audit — Lighthouse 95+ on all pages, web-vitals green | 77–78 |
 | Marketing site (apps/marketing) — landing page, pricing, FAQ, blog scaffold | 79–84 |
 | Beta program — invite list, beta user feedback loop, analytics review | 85–87 |
 | Pricing decision — freemium tiers vs single price, configured in Stripe (or deferred) | 88 |
