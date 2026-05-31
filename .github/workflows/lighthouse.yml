@@ -29,4 +29,4 @@ jobs:
         run: pnpm build --filter=@fundededge/web
 
       - name: Run Lighthouse CI
-        run: pnpm --filter @fundededge/web exec lhci autorun --config=lighthouserc.js
+        run: pnpm exec lhci autorun --config=apps/web/lighthouserc.js
