@@ -5,7 +5,7 @@ import {
   Panel as ResizablePanel,
   PanelResizeHandle,
 } from 'react-resizable-panels'
-import type { PanelGroupProps, PanelProps, PanelResizeHandleProps } from 'react-resizable-panels'
+import type { PanelGroupProps, PanelProps, PanelResizeHandleProps, ImperativePanelHandle } from 'react-resizable-panels'
 
 function ResizableHandle({ className, ...props }: PanelResizeHandleProps) {
   return (
@@ -24,4 +24,4 @@ function ResizableHandle({ className, ...props }: PanelResizeHandleProps) {
 }
 
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
-export type { PanelGroupProps, PanelProps, PanelResizeHandleProps }
+export type { PanelGroupProps, PanelProps, PanelResizeHandleProps, ImperativePanelHandle }
