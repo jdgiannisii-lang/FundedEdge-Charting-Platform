@@ -8,7 +8,7 @@ export { Card } from './components/card'
 export type { CardProps } from './components/card'
 
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './components/resizable'
-export type { PanelGroupProps, PanelProps, PanelResizeHandleProps } from './components/resizable'
+export type { PanelGroupProps, PanelProps, PanelResizeHandleProps, ImperativePanelHandle } from './components/resizable'
 
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './components/tabs'
 
