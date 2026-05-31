@@ -1,8 +1,23 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Cockpit from '@/components/shell/cockpit'
+import DesktopOnlyNotice from '@/components/shell/desktop-only-notice'
+
+function useMediaQuery(query: string): boolean {
+  // Default true (assume desktop) to avoid layout shift on real desktops
+  const [matches, setMatches] = useState(true)
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    setMatches(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [query])
+  return matches
+}
+
 export default function CockpitPage() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Cockpit (placeholder)</h1>
-      <p className="mt-4 text-gray-500">The prop trading cockpit — coming in Phase 1.</p>
-    </main>
-  );
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
+  return isDesktop ? <Cockpit /> : <DesktopOnlyNotice />
 }
