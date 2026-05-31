@@ -24,7 +24,6 @@
     "onlyBuiltDependencies": ["@biomejs/biome", "esbuild", "sharp", "supabase"]
   },
   "devDependencies": {
-    "@lhci/cli": "^0.14.0",
     "@playwright/test": "^1.49.0",
     "@biomejs/biome": "^1.9.0",
     "@changesets/cli": "^2.27.0",
