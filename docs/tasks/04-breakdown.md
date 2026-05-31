@@ -929,7 +929,7 @@ Update this table as each session completes.
 | S2 | Zustand stores | 🟢 Done | #67 | useUiStore with persist + skipHydration; useUi() hook; theme.ts documents next-themes |
 | S3 | `packages/ui` new components | 🟢 Done | #69 | Resizable, Tabs, Popover (.glass), DropdownMenu (.glass), Avatar, ThemeProvider — all exported from index.ts |
 | S4 | Shell components | 🟢 Done | #71 | All 10 components: cockpit (imperative refs + rehydration), panels (collapse/expand), top-bar, user-menu, theme/density toggles, tabs, desktop-only notice |
-| S5 | Route group + layout + pages | 🔴 Not started | — | |
+| S5 | Route group + layout + pages | 🟢 Done | #72 | ThemeProvider in root layout; app/app/layout.tsx auth guard (force-dynamic); cockpit page with useMediaQuery; settings stub |
 | S6 | Storybook stories | 🔴 Not started | — | |
 | S7 | Playwright E2E | 🔴 Not started | — | |
 | S8 | Lighthouse CI + registry update | 🔴 Not started | — | |
