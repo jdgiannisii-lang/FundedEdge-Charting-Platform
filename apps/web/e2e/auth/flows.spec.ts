@@ -52,10 +52,8 @@ test.describe('email signup → verify → login → logout', () => {
     await page.goto(verifyLink)
     await expect(page).toHaveURL(/\/app/)
 
-    // Sign out
-    // (signOutAction is triggered from the app shell — placeholder until S4 shell is built)
-    // For now, verify we landed on /app successfully
-    await expect(page.getByText('Cockpit')).toBeVisible()
+    // Cockpit shell renders — the top bar user menu is the stable landmark
+    await expect(page.getByRole('button', { name: 'Open user menu' })).toBeVisible()
   })
 })
 
@@ -111,6 +109,7 @@ test.describe('password reset flow', () => {
     // user to send to. Without this step Supabase silently no-ops (anti-enumeration) and
     // the inbucket mailbox stays empty.
     const email = randomEmail()
+    const initialPassword = 'InitialPass1!'
     const newPassword = 'NewPassword2!'
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://localhost:54321'
@@ -118,7 +117,7 @@ test.describe('password reset flow', () => {
     const createRes = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
       method: 'POST',
       headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: 'InitialPass1!', email_confirm: true }),
+      body: JSON.stringify({ email, password: initialPassword, email_confirm: true }),
     })
     if (!createRes.ok) throw new Error(`Failed to seed test user: ${await createRes.text()}`)
 
