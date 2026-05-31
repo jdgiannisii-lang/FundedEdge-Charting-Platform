@@ -932,7 +932,7 @@ Update this table as each session completes.
 | S5 | Route group + layout + pages | 🟢 Done | #72 | ThemeProvider in root layout; app/app/layout.tsx auth guard (force-dynamic); cockpit page with useMediaQuery; settings stub |
 | S6 | Storybook stories | 🟢 Done | #73 | 7 story files; user-menu/top-bar refactored to take signOutAction as prop (RSC→client DI); storybook:build passes |
 | S7 | Playwright E2E | 🟢 Done | #74 | 4 cockpit tests (resize/collapse/theme/desktop-gate) gated behind FULL_AUTH_TESTS; 21 pass / 8 skip in CI; fixed 2 latent flows.spec.ts bugs |
-| S8 | Lighthouse CI + registry update | 🔴 Not started | — | |
+| S8 | Lighthouse CI + registry update | 🟢 Done | #75 | lighthouserc.js (a11y=1.0 error, perf=0.95 warn) targeting /login proxy; lighthouse.yml workflow; CLAUDE.md registry → Done; fixed slate-500 contrast to reach a11y 1.0 |
 
 ---
 
