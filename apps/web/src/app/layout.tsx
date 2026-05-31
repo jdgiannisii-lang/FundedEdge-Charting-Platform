@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { PostHogPageView } from '@/components/posthog-pageview'
 import { PostHogProvider } from '@/components/posthog-provider'
+import { ThemeProvider } from '@fundededge/ui'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -11,15 +12,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <PostHogProvider>
-          {/* Suspense required because PostHogPageView calls useSearchParams() */}
-          <Suspense fallback={null}>
-            <PostHogPageView />
-          </Suspense>
-          {children}
-        </PostHogProvider>
+        <ThemeProvider defaultTheme="dark" attribute="class">
+          <PostHogProvider>
+            {/* Suspense required because PostHogPageView calls useSearchParams() */}
+            <Suspense fallback={null}>
+              <PostHogPageView />
+            </Suspense>
+            {children}
+          </PostHogProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
