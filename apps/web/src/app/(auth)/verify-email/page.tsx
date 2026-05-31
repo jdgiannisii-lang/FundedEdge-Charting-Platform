@@ -14,7 +14,7 @@ export default function VerifyEmailPage() {
         <p className="text-sm text-slate-400">
           We sent you a verification link. Click it to activate your account.
         </p>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-400">
           {"Didn't get an email? Check your spam folder or "}
           <Link href="/signup" className="text-blue-400 hover:underline">
             try again
