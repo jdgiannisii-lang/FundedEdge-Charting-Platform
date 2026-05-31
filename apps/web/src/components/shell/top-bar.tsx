@@ -1,6 +1,10 @@
 import UserMenu from './user-menu'
 
-export default function TopBar() {
+interface TopBarProps {
+  signOutAction: () => void
+}
+
+export default function TopBar({ signOutAction }: TopBarProps) {
   return (
     <header
       className="sticky top-0 z-[--z-topbar] flex h-14 items-center border-b border-[--color-border-subtle] bg-[--color-bg-primary] px-4"
@@ -19,7 +23,7 @@ export default function TopBar() {
 
       {/* Right — user menu */}
       <div className="flex-1 flex justify-end">
-        <UserMenu />
+        <UserMenu signOutAction={signOutAction} />
       </div>
     </header>
   )

@@ -11,11 +11,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@fundededge/ui'
-import { signOutAction } from '@/lib/auth/actions'
 import ThemeToggle from './theme-toggle'
 import DensityToggle from './density-toggle'
 
-export default function UserMenu() {
+interface UserMenuProps {
+  // Passed from the server layout (RSC → client component) so this file
+  // never imports the server action directly — keeps next/headers out of
+  // the client bundle and makes the component storyable in isolation.
+  signOutAction: () => void
+}
+
+export default function UserMenu({ signOutAction }: UserMenuProps) {
   const [email, setEmail] = useState<string | null>(null)
 
   useEffect(() => {
@@ -73,7 +79,7 @@ export default function UserMenu() {
 
         {/* Logout */}
         <DropdownMenuItem
-          onClick={() => { signOutAction() }}
+          onClick={() => signOutAction()}
           className="text-[--color-danger] focus:text-[--color-danger]"
         >
           Sign out
