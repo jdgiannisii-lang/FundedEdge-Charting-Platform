@@ -39,8 +39,8 @@ export default async function LoginPage({ searchParams }: Props) {
         signInWithGoogleAction={signInWithGoogleAction}
       />
 
-      <p className="text-center text-sm text-slate-500">
-        <Link href="/forgot-password" className="hover:text-slate-300 hover:underline">
+      <p className="text-center text-sm text-slate-400">
+        <Link href="/forgot-password" className="hover:text-slate-200 hover:underline">
           Forgot your password?
         </Link>
       </p>
