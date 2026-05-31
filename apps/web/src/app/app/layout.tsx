@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import type * as React from 'react'
 import { createServerClient } from '@/lib/supabase/server'
+import { signOutAction } from '@/lib/auth/actions'
 import TopBar from '@/components/shell/top-bar'
 
 // Auth guard reads cookies at request time — never statically prerender
@@ -16,7 +17,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
-      <TopBar />
+      {/* Server action passed down so client components don't import it directly */}
+      <TopBar signOutAction={signOutAction} />
       {children}
     </div>
   )
