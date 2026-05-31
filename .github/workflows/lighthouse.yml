@@ -29,4 +29,7 @@ jobs:
         run: pnpm build --filter=@fundededge/web
 
       - name: Run Lighthouse CI
-        run: pnpm exec lhci autorun --config=apps/web/lighthouserc.js
+        # Run via dlx (ephemeral) so @lhci/cli's transitive zod v3 never enters
+        # the workspace lockfile — it would otherwise collide with zod v4 used by
+        # @hookform/resolvers and break the apps/web production build.
+        run: pnpm dlx @lhci/cli@0.14.0 autorun --config=apps/web/lighthouserc.js
