@@ -53,7 +53,7 @@ Goal: the differentiator. The reason FundedEdge exists.
 
 | ID | Deliverable | Days |
 |---|---|---|
-| 05 | Rules engine — pure TS package with presets for Apex, TPT, Tradeify, Lucid + custom rules support, exhaustive tests | 36–46 |
+| 05 🟡 | Rules engine — pure TS package with presets for Apex, TPT, Tradeify, Lucid + custom rules support, exhaustive tests | 36–46 |
 | 06 | Account management — UI to create/edit/delete prop firm accounts, configure rules from preset or custom | 47–51 |
 | 07 | Prop dashboard panel — live calculations, alerts, "X until breach" displays | 52–55 |
 
