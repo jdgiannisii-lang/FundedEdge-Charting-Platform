@@ -10,12 +10,18 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint ./src",
     "lint:fix": "biome lint --write ./src",
+    "test:cov": "vitest run --coverage",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "clean": "rm -rf dist .turbo"
   },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
   "devDependencies": {
     "@fundededge/config": "workspace:*",
+    "@vitest/coverage-v8": "^2.1.0",
+    "fast-check": "^3.22.0",
     "typescript": "^6.0.3",
     "vitest": "^2.1.0"
   }
