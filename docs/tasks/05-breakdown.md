@@ -989,7 +989,7 @@ Update this table as each session completes.
 
 | # | Session | Status | PR | Notes |
 |---|---------|--------|----|-------|
-| S0 | Scaffold package + deps + stub tree | 🔴 Not started | — | |
+| S0 | Scaffold package + deps + stub tree | 🟢 Done | [#79](https://github.com/jdgiannisii-lang/FundedEdge-Charting-Platform/pull/79) | Run with Codex |
 | S1 | Types + schemas (contract alignment) | 🔴 Not started | — | |
 | S2 | Helpers: math / time / format | 🔴 Not started | — | |
 | S3 | Rule: trailing drawdown | 🔴 Not started | — | |

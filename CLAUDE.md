@@ -158,7 +158,7 @@ This is the live status of every major component. Update it in the same PR as th
 | 02 | Supabase Schema + RLS | `packages/db` | 🟢 Done | 01 | `docs/tasks/02-supabase-schema.md` |
 | 03 | Auth System | `apps/web/src/` | 🟢 Done | 01, 02 | `docs/tasks/03-auth-system.md` |
 | 04 | App Shell (3-panel layout) | `apps/web/src/app/app`, `apps/web/src/components/shell` | 🟢 Done | 01, 03 | `docs/tasks/04-app-shell.md` |
-| 05 | Rules Engine | `packages/rules-engine` | 🔴 Not started | 01 | `docs/tasks/05-rules-engine.md` |
+| 05 | Rules Engine | `packages/rules-engine` | 🟡 In progress (S0 done) | 01 | `docs/tasks/05-rules-engine.md` |
 | 06 | Account Management | `apps/web/src/features/accounts` | 🔴 Not started | 02, 03, 05 | `docs/tasks/06-account-management.md` |
 | 07 | Prop Dashboard Panel | `apps/web/src/features/prop-dashboard` | 🔴 Not started | 04, 05, 06 | `docs/tasks/07-prop-dashboard.md` |
 | 08 | Chart Container | `packages/chart`, `apps/web/src/features/chart` | 🔴 Not started | 04 | `docs/tasks/08-chart-container.md` |
